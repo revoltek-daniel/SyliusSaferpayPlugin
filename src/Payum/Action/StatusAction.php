@@ -30,7 +30,8 @@ final class StatusAction implements ActionInterface
             $request->markFailed();
 
             return;
-        }    }
+        }
+    }
 
     public function supports($request): bool
     {

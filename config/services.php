@@ -3,10 +3,12 @@
 declare(strict_types=1);
 
 use CommerceWeavers\SyliusSaferpayPlugin\Form\Type\SaferpayGatewayConfigurationType;
+use CommerceWeavers\SyliusSaferpayPlugin\Payum\Action\AuthorizeAction;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Action\CaptureAction;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Factory\SaferpayGatewayFactory;
 use Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $containerConfigurator) {
     $services = $containerConfigurator->services();
@@ -26,5 +28,13 @@ return static function (ContainerConfigurator $containerConfigurator) {
     $services->set(CaptureAction::class)
         ->public()
         ->tag('payum.action', ['factory' => 'saferpay_payment', 'alias' => 'payum.action.capture'])
+    ;
+
+    $services->set(AuthorizeAction::class)
+        ->public()
+        ->args([
+            service('sylius.http_client')
+        ])
+        ->tag('payum.action', ['factory' => 'saferpay_payment', 'alias' => 'payum.action.authorize'])
     ;
 };

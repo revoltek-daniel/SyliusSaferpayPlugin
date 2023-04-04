@@ -17,6 +17,7 @@ class SaferpayGatewayFactory extends GatewayFactory
             'payum.factory_name' => 'saferpay_payment',
             'payum.factory_title' => 'Saferpay Payment',
             'payum.action.status' => new StatusAction(),
+            'use_authorize' => true,
         ]);
 
         $config['payum.api'] = function (ArrayObject $config) {
