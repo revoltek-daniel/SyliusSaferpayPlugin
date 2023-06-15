@@ -47,6 +47,5 @@ final class PaymentProvider implements PaymentProviderInterface
         throw new NotFoundHttpException(
             sprintf('Order with token "%s" does not have an active payment.', $orderTokenValue),
         );
-
     }
 }

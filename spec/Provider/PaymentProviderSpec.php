@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\CommerceWeavers\SyliusSaferpayPlugin\Provider;
 
+use CommerceWeavers\SyliusSaferpayPlugin\Exception\PaymentAlreadyCompletedException;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\OrderProviderInterface;
 use PhpSpec\ObjectBehavior;
 use Sylius\Component\Core\Model\OrderInterface;
@@ -24,10 +25,27 @@ final class PaymentProviderSpec extends ObjectBehavior
     ): void {
         $orderProvider->provideForAssert('TOKEN')->willReturn($order);
         $order->getLastPayment(PaymentInterface::STATE_NEW)->willReturn(null);
+        $order->getLastPayment(PaymentInterface::STATE_COMPLETED)->willReturn(null);
         $order->getTokenValue()->willReturn('TOKEN');
 
         $this
             ->shouldThrow(new NotFoundHttpException('Order with token "TOKEN" does not have an active payment.'))
+            ->during('provideForAssert', ['TOKEN'])
+        ;
+    }
+
+    function it_throws_an_exception_when_last_payment_with_new_state_does_not_exist_for_assert_but_there_is_completed_one(
+        OrderProviderInterface $orderProvider,
+        OrderInterface $order,
+        PaymentInterface $payment,
+    ): void {
+        $orderProvider->provideForAssert('TOKEN')->willReturn($order);
+        $order->getLastPayment(PaymentInterface::STATE_NEW)->willReturn(null);
+        $order->getLastPayment(PaymentInterface::STATE_COMPLETED)->willReturn($payment);
+        $order->getTokenValue()->willReturn('TOKEN');
+
+        $this
+            ->shouldThrow(PaymentAlreadyCompletedException::class)
             ->during('provideForAssert', ['TOKEN'])
         ;
     }
@@ -38,10 +56,27 @@ final class PaymentProviderSpec extends ObjectBehavior
     ): void {
         $orderProvider->provideForCapture('TOKEN')->willReturn($order);
         $order->getLastPayment(PaymentInterface::STATE_AUTHORIZED)->willReturn(null);
+        $order->getLastPayment(PaymentInterface::STATE_COMPLETED)->willReturn(null);
         $order->getTokenValue()->willReturn('TOKEN');
 
         $this
             ->shouldThrow(new NotFoundHttpException('Order with token "TOKEN" does not have an active payment.'))
+            ->during('provideForCapture', ['TOKEN'])
+        ;
+    }
+
+    function it_throws_an_exception_when_last_payment_with_new_state_does_not_exist_for_capture_but_there_is_completed_one(
+        OrderProviderInterface $orderProvider,
+        OrderInterface $order,
+        PaymentInterface $payment,
+    ): void {
+        $orderProvider->provideForCapture('TOKEN')->willReturn($order);
+        $order->getLastPayment(PaymentInterface::STATE_AUTHORIZED)->willReturn(null);
+        $order->getLastPayment(PaymentInterface::STATE_COMPLETED)->willReturn($payment);
+        $order->getTokenValue()->willReturn('TOKEN');
+
+        $this
+            ->shouldThrow(PaymentAlreadyCompletedException::class)
             ->during('provideForCapture', ['TOKEN'])
         ;
     }
@@ -53,6 +88,7 @@ final class PaymentProviderSpec extends ObjectBehavior
     ): void {
         $orderProvider->provideForAssert('TOKEN')->willReturn($order);
         $order->getLastPayment(PaymentInterface::STATE_NEW)->willReturn($payment);
+        $order->getTokenValue()->willReturn('TOKEN');
 
         $this->provideForAssert('TOKEN')->shouldReturn($payment);
     }
@@ -64,6 +100,7 @@ final class PaymentProviderSpec extends ObjectBehavior
     ): void {
         $orderProvider->provideForCapture('TOKEN')->willReturn($order);
         $order->getLastPayment(PaymentInterface::STATE_AUTHORIZED)->willReturn($payment);
+        $order->getTokenValue()->willReturn('TOKEN');
 
         $this->provideForCapture('TOKEN')->shouldReturn($payment);
     }

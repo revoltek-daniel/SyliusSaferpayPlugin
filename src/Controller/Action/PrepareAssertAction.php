@@ -27,6 +27,7 @@ final class PrepareAssertAction
     public function __invoke(Request $request, string $tokenValue): RedirectResponse
     {
         $requestConfiguration = $this->requestConfigurationFactory->create($this->orderMetadata, $request);
+
         try {
             $lastPayment = $this->paymentProvider->provideForAssert($tokenValue);
         } catch (PaymentAlreadyCompletedException) {
