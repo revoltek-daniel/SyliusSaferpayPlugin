@@ -64,12 +64,8 @@ final class PrepareAssertActionSpec extends ObjectBehavior
     }
 
     function it_redirects_to_order_thank_you_page_if_payment_is_already_completed(PaymentProviderInterface $paymentProvider,
-        TokenProviderInterface $tokenProvider,
-        RequestConfiguration $requestConfiguration,
         UrlGeneratorInterface $router,
         Request $request,
-        PaymentInterface $payment,
-        TokenInterface $token,
     ): void {
         $paymentProvider->provideForAssert('TOKEN')->willThrow(PaymentAlreadyCompletedException::class);
         $router->generate('sylius_shop_order_thank_you')->willReturn('/thank-you');

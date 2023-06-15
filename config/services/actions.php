@@ -53,6 +53,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
                 ->args(['sylius.order']),
             service(PaymentProviderInterface::class),
             service(TokenProviderInterface::class),
+            service('router'),
         ])
         ->tag('controller.service_arguments')
     ;
