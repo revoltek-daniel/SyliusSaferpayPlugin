@@ -40,6 +40,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('sylius.factory.payum_resolve_next_route'),
             service(AssertFactoryInterface::class),
             service('router'),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('controller.service_arguments')
     ;
@@ -75,6 +76,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->args([
             service('payum'),
             service('sylius.command_bus'),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('controller.service_arguments')
     ;

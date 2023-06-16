@@ -8,6 +8,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Payum\Factory\AssertFactoryInterface;
 use Exception;
 use Payum\Core\Payum;
 use Payum\Core\Request\GetStatusInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\PayumBundle\Factory\GetStatusFactoryInterface;
 use Sylius\Bundle\PayumBundle\Factory\ResolveNextRouteFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,12 +25,15 @@ final class AssertAction
         private ResolveNextRouteFactoryInterface $resolveNextRouteRequestFactory,
         private AssertFactoryInterface $assertFactory,
         private RouterInterface $router,
+        private LoggerInterface $logger,
     ) {
     }
 
     /** @throws Exception */
     public function __invoke(Request $request): RedirectResponse
     {
+        $this->logger->debug('AssertAction:35 - AssertAction started');
+
         $token = $this->payum->getHttpRequestVerifier()->verify($request);
         $gateway = $this->payum->getGateway($token->getGatewayName());
 
@@ -39,7 +43,12 @@ final class AssertAction
         $status = $this->getStatusRequestFactory->createNewWithModel($assert->getFirstModel());
         $gateway->execute($status);
 
+        $this->logger->debug('AssertAction:46 - Payment status is {status}', ['status' => $status->getValue()]);
+
         $resolveNextRoute = $this->resolveNextRouteRequestFactory->createNewWithModel($assert->getFirstModel());
+
+        $this->logger->debug('AssertAction:50 - Next route is {route}', ['route' => $resolveNextRoute->getRouteName()]);
+
         $gateway->execute($resolveNextRoute);
 
         $this->payum->getHttpRequestVerifier()->invalidate($token);

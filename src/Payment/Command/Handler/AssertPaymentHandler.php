@@ -10,6 +10,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Payum\Factory\ResolveNextCommandFactory
 use Payum\Core\Payum;
 use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\StorageInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\PayumBundle\Factory\GetStatusFactoryInterface;
 use Sylius\Component\Payment\Model\PaymentInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -25,6 +26,7 @@ final class AssertPaymentHandler
         private AssertFactoryInterface $assertFactory,
         private GetStatusFactoryInterface $getStatusRequestFactory,
         private ResolveNextCommandFactoryInterface $resolveNextCommandFactory,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -32,6 +34,9 @@ final class AssertPaymentHandler
     {
         /** @var TokenInterface|null $token */
         $token = $this->tokenStorage->find($command->getPayumToken());
+        if ($token === null) {
+            $this->logger->debug('AssertPaymentHandler:38 - Token {token} not found', ['token' => $command->getPayumToken()]);
+        }
         Assert::notNull($token, 'Token not found.');
 
         $gateway = $this->payum->getGateway($token->getGatewayName());
@@ -41,6 +46,10 @@ final class AssertPaymentHandler
 
         /** @var PaymentInterface $payment */
         $payment = $assert->getFirstModel();
+        $this->logger->debug(
+            'AssertPaymentHandler:50 - Payment with ID {id} for order {orderToken} asserted',
+            ['id' => $payment->getId(), 'orderToken' => $payment->getOrder()->getTokenValue()]
+        );
 
         $status = $this->getStatusRequestFactory->createNewWithModel($payment);
         $gateway->execute($status);
@@ -48,6 +57,7 @@ final class AssertPaymentHandler
         $this->tokenStorage->delete($token);
 
         $resolvedNextCommand = $this->resolveNextCommandFactory->createNewWithModel($payment);
+        $this->logger->debug('AssertPaymentHandler:61 - Next command resolved');
         $gateway->execute($resolvedNextCommand);
 
         $nextCommand = $resolvedNextCommand->getNextCommand();
