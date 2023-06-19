@@ -8,6 +8,8 @@ use CommerceWeavers\SyliusSaferpayPlugin\Exception\OrderAlreadyCompletedExceptio
 use CommerceWeavers\SyliusSaferpayPlugin\Exception\PaymentAlreadyCompletedException;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Provider\TokenProviderInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\PaymentProviderInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Component\Resource\Metadata\MetadataInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,6 +24,8 @@ final class PrepareAssertAction
         private PaymentProviderInterface $paymentProvider,
         private TokenProviderInterface $tokenProvider,
         private UrlGeneratorInterface $router,
+        private EntityManagerInterface $entityManager,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -31,7 +35,12 @@ final class PrepareAssertAction
 
         try {
             $lastPayment = $this->paymentProvider->provideForAssert($tokenValue);
+
+            $lastPayment->setDetails(array_merge($lastPayment->getDetails(), ['processing_started' => true]));
+            $this->entityManager->flush();
         } catch (PaymentAlreadyCompletedException|OrderAlreadyCompletedException) {
+            $this->logger->debug('PrepareAssertAction:40 - payment already completed');
+
             return new RedirectResponse($this->router->generate('sylius_shop_order_thank_you'));
         }
 

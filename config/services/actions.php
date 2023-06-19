@@ -28,6 +28,8 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service(PaymentProviderInterface::class),
             service(TokenProviderInterface::class),
             service('router'),
+            service('doctrine.orm.entity_manager'),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('controller.service_arguments')
     ;
@@ -55,6 +57,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service(PaymentProviderInterface::class),
             service(TokenProviderInterface::class),
             service('router'),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('controller.service_arguments')
     ;

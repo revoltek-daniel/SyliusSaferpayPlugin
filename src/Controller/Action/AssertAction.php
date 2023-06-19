@@ -47,9 +47,9 @@ final class AssertAction
 
         $resolveNextRoute = $this->resolveNextRouteRequestFactory->createNewWithModel($assert->getFirstModel());
 
-        $this->logger->debug('AssertAction:50 - Next route is {route}', ['route' => $resolveNextRoute->getRouteName()]);
-
         $gateway->execute($resolveNextRoute);
+
+        $this->logger->debug('AssertAction:50 - Next route is {route}', ['route' => $resolveNextRoute->getRouteName()]);
 
         $this->payum->getHttpRequestVerifier()->invalidate($token);
 
@@ -60,7 +60,11 @@ final class AssertAction
 
         $this->handleFlashMessage($status, $request);
 
-        return new RedirectResponse($this->router->generate($routeName, $resolveNextRoute->getRouteParameters()));
+        $redirectUrl = $this->router->generate($routeName, $resolveNextRoute->getRouteParameters());
+
+        $this->logger->debug('AssertAction:65 - redirecting to {url}', ['url' => $redirectUrl]);
+
+        return new RedirectResponse($redirectUrl);
     }
 
     private function handleFlashMessage(GetStatusInterface $status, Request $request): void

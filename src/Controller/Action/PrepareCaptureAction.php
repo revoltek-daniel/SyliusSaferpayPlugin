@@ -8,6 +8,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Exception\OrderAlreadyCompletedExceptio
 use CommerceWeavers\SyliusSaferpayPlugin\Exception\PaymentAlreadyCompletedException;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Provider\TokenProviderInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\PaymentProviderInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Component\Resource\Metadata\MetadataInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,6 +23,7 @@ final class PrepareCaptureAction
         private PaymentProviderInterface $paymentProvider,
         private TokenProviderInterface $tokenProvider,
         private UrlGeneratorInterface $router,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -32,6 +34,8 @@ final class PrepareCaptureAction
         try {
             $lastPayment = $this->paymentProvider->provideForCapture($tokenValue);
         } catch (PaymentAlreadyCompletedException|OrderAlreadyCompletedException) {
+            $this->logger->debug('PrepareCaptureAction:37 - payment already completed');
+
             return new RedirectResponse($this->router->generate('sylius_shop_order_thank_you'));
         }
 

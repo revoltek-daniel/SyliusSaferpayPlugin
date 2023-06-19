@@ -39,7 +39,7 @@ final class PaymentProvider implements PaymentProviderInterface
             return $payment;
         }
 
-        $payment = $order->getLastPayment(PaymentInterface::STATE_COMPLETED);
+        $payment = $order->getLastPayment();
         if (null !== $payment) {
             throw PaymentAlreadyCompletedException::occur((int) $payment->getId(), $orderTokenValue);
         }

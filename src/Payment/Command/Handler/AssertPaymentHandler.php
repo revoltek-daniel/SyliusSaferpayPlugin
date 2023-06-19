@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CommerceWeavers\SyliusSaferpayPlugin\Payment\Command\Handler;
 
+use CommerceWeavers\SyliusSaferpayPlugin\Exception\PaymentAlreadyCompletedException;
 use CommerceWeavers\SyliusSaferpayPlugin\Payment\Command\AssertPaymentCommand;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Factory\AssertFactoryInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Factory\ResolveNextCommandFactoryInterface;
@@ -12,7 +13,7 @@ use Payum\Core\Security\TokenInterface;
 use Payum\Core\Storage\StorageInterface;
 use Psr\Log\LoggerInterface;
 use Sylius\Bundle\PayumBundle\Factory\GetStatusFactoryInterface;
-use Sylius\Component\Payment\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DispatchAfterCurrentBusStamp;
 use Webmozart\Assert\Assert;
@@ -46,6 +47,14 @@ final class AssertPaymentHandler
 
         /** @var PaymentInterface $payment */
         $payment = $assert->getFirstModel();
+
+        if (
+            $payment->getState() !== PaymentInterface::STATE_NEW ||
+            (isset($payment->getDetails()['processing_started']) && $payment->getDetails()['processing_started'] === true)
+        ) {
+            throw PaymentAlreadyCompletedException::occur($payment->getId(), $payment->getOrder()->getTokenValue());
+        }
+
         $this->logger->debug(
             'AssertPaymentHandler:50 - Payment with ID {id} for order {orderToken} asserted',
             ['id' => $payment->getId(), 'orderToken' => $payment->getOrder()->getTokenValue()]
