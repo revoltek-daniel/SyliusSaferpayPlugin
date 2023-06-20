@@ -32,6 +32,9 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('sylius.factory.payum_get_status_action'),
             service(ResolveNextCommandFactoryInterface::class),
             service('monolog.logger.saferpay'),
+            service('sylius.repository.payment'),
+            service('doctrine.orm.entity_manager'),
+            service('lock.factory'),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.command_bus'])
     ;

@@ -28,8 +28,8 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service(PaymentProviderInterface::class),
             service(TokenProviderInterface::class),
             service('router'),
-            service('doctrine.orm.entity_manager'),
             service('monolog.logger.saferpay'),
+            service('sylius.command_bus'),
         ])
         ->tag('controller.service_arguments')
     ;
