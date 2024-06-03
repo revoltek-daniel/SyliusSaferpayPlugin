@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CommerceWeavers\SyliusSaferpayPlugin\Controller\Action;
 
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\OrderProviderInterface;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,7 @@ final class AfterUnsuccessfulPaymentAction
     public function __construct(
         private OrderProviderInterface $orderProvider,
         private UrlGeneratorInterface $router,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -36,6 +38,8 @@ final class AfterUnsuccessfulPaymentAction
         if ($lastPayment->getState() === PaymentInterface::STATE_NEW) {
             $this->addFlashMessageForPenultimatePayment($request, $penultimatePayment);
 
+            $this->logger->error('AfterUnsuccessfulPaymentAction: Payment failed for order ' . $tokenValue);
+
             return new RedirectResponse($this->router->generate(
                 'sylius_shop_order_show',
                 ['tokenValue' => $tokenValue],
@@ -45,6 +49,8 @@ final class AfterUnsuccessfulPaymentAction
         if ($lastPayment->getState() === PaymentInterface::STATE_COMPLETED) {
             $this->addFlashMessage($request, 'info', 'sylius.payment.completed');
         }
+
+        $this->logger->error('AfterUnsuccessfulPaymentAction: Redirect to thankyou for order ' . $tokenValue);
 
         return new RedirectResponse($this->router->generate('sylius_shop_order_thank_you'));
     }

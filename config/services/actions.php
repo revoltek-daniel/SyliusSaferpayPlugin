@@ -93,6 +93,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->args([
             service(OrderProviderInterface::class),
             service('router'),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('controller.service_arguments')
     ;
