@@ -37,7 +37,7 @@ final class AssertAction implements ActionInterface
         $response = $this->saferpayClient->assert($payment);
 
         if ($response instanceof ErrorResponse) {
-            $this->logger->error('Assert failed for payment: ' . $payment->getId(), ['response' => $response]);
+            $this->logger->error('Assert failed for payment: ' . $payment->getId(), ['response' => $response->toArray()]);
             $this->failedResponseHandler->handle($payment, $response);
 
             return;
