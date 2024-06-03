@@ -38,7 +38,7 @@ final class SaferpayPaymentProcessor implements SaferpayPaymentProcessorInterfac
         $paymentDetails = $payment->getDetails();
 
         if (!isset($paymentDetails['status'])) {
-            $this->logger->debug('Payment processing aborted - payment already processed:', ['details' => $paymentDetails]);
+            $this->logger->debug('Payment processing aborted - payment already processed:', ['id' => $payment->getId(), 'details' => $paymentDetails]);
 
             throw new PaymentAlreadyProcessedException();
         }
@@ -47,7 +47,7 @@ final class SaferpayPaymentProcessor implements SaferpayPaymentProcessorInterfac
             (isset($paymentDetails['processing']) && $paymentDetails['processing'] === true) ||
             $paymentDetails['status'] !== $targetState
         ) {
-            $this->logger->debug('Payment processing aborted - payment being processed:', ['details' => $paymentDetails]);
+            $this->logger->debug('Payment processing aborted - payment being processed:', ['id' => $payment->getId(), 'details' => $paymentDetails]);
 
             throw new PaymentBeingProcessedException();
         }
