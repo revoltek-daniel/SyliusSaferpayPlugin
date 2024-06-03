@@ -41,6 +41,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->public()
         ->args([
             service(SaferpayClientInterface::class),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('payum.action', ['factory' => 'saferpay', 'alias' => 'payum.action.authorize'])
     ;
@@ -52,6 +53,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service(SaferpayClientInterface::class),
             service(SuccessfulResponseHandlerInterface::class),
             service(FailedResponseHandlerInterface::class),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('payum.action', ['factory' => 'saferpay', 'alias' => 'payum.action.assert'])
     ;
@@ -72,6 +74,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->args([
             service(SaferpayClientInterface::class),
             service(StatusCheckerInterface::class),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('payum.action', ['factory' => 'saferpay', 'alias' => 'payum.action.capture'])
     ;
@@ -100,6 +103,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->public()
         ->args([
             service(StatusCheckerInterface::class),
+            service('monolog.logger.saferpay'),
         ])
         ->tag('payum.action', ['factory' => 'saferpay', 'alias' => 'payum.action.resolve_next_route'])
     ;

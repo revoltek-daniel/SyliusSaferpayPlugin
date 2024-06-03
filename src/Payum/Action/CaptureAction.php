@@ -11,6 +11,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Payum\Status\StatusCheckerInterface;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Capture;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,6 +20,7 @@ final class CaptureAction implements ActionInterface
     public function __construct(
         private SaferpayClientInterface $saferpayClient,
         private StatusCheckerInterface $statusChecker,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -37,6 +39,7 @@ final class CaptureAction implements ActionInterface
         /** @var CaptureResponse|ErrorResponse $response */
         $response = $this->saferpayClient->capture($payment);
         if ($response instanceof ErrorResponse) {
+            $this->logger->error('Capture failed for payment: ' . $payment->getId(), ['response' => $response]);
             $payment->setDetails(array_merge($payment->getDetails(), [
                 'status' => StatusAction::STATUS_FAILED,
                 'transaction_id' => $response->getTransactionId(),

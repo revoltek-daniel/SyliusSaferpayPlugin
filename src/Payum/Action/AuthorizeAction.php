@@ -10,6 +10,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\ErrorResponse;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Authorize;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Webmozart\Assert\Assert;
 
@@ -17,6 +18,7 @@ final class AuthorizeAction implements ActionInterface
 {
     public function __construct(
         private SaferpayClientInterface $saferpayClient,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -38,6 +40,7 @@ final class AuthorizeAction implements ActionInterface
         $response = $this->saferpayClient->authorize($payment, $token);
 
         if ($response instanceof ErrorResponse) {
+            $this->logger->error('Authorize failed for payment: ' . $payment->getId(), ['response' => $response]);
             $payment->setDetails(array_merge($payment->getDetails(), [
                 'status' => StatusAction::STATUS_FAILED,
             ]));

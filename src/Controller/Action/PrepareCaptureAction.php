@@ -36,7 +36,7 @@ final class PrepareCaptureAction
         try {
             $lastPayment = $this->paymentProvider->provideForCapture($tokenValue);
         } catch (PaymentAlreadyProcessedException) {
-            $this->logger->debug('Synchronous processing aborted - webhook handled the payment');
+            $this->logger->debug('PrepareCaptureAction: Synchronous processing aborted - webhook handled the payment');
 
             /** @var Session $session */
             $session = $request->getSession();
@@ -47,7 +47,7 @@ final class PrepareCaptureAction
 
         $token = $this->tokenProvider->provideForCapture($lastPayment, $requestConfiguration);
 
-        $this->logger->debug('Synchronous processing PrepareCaptureAction succeeded');
+        $this->logger->debug('PrepareCaptureAction: Synchronous processing PrepareCaptureAction succeeded');
 
         return new RedirectResponse($token->getTargetUrl());
     }

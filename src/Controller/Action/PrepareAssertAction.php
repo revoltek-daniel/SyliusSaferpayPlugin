@@ -32,7 +32,7 @@ final class PrepareAssertAction
 
     public function __invoke(Request $request, string $tokenValue): RedirectResponse
     {
-        $this->logger->debug('PrepareAssertAction: Synchronous processing started');
+        $this->logger->debug('PrepareAssertAction: Synchronous processing started for order ' . $tokenValue);
 
         $count = 0;
         do {
@@ -40,10 +40,10 @@ final class PrepareAssertAction
                 $payment = $this->paymentProvider->provideForOrder($tokenValue);
                 $this->saferpayPaymentProcessor->lock($payment);
             } catch (PaymentBeingProcessedException) {
-                $this->logger->debug('Synchronous processing suspended - webhook handled the payment');
+                $this->logger->debug('PrepareAssertAction:Synchronous processing suspended - webhook handled the payment ' . $tokenValue);
 
                 if (++$count >= $this->maxAttempts) {
-                    $this->logger->debug('Synchronous processing aborted - webhook handled the payment');
+                    $this->logger->debug('PrepareAssertAction: Synchronous processing aborted - webhook handled the payment ' . $tokenValue);
 
                     return new RedirectResponse($this->router->generate(
                         'commerce_weavers_sylius_after_unsuccessful_payment',
@@ -53,7 +53,7 @@ final class PrepareAssertAction
 
                 continue;
             } catch (PaymentAlreadyProcessedException) {
-                $this->logger->debug('Synchronous processing aborted - webhook handled the payment');
+                $this->logger->debug('PrepareAssertAction: Synchronous processing aborted - webhook processed the payment ' . $tokenValue);
 
                 return new RedirectResponse($this->router->generate(
                     'commerce_weavers_sylius_after_unsuccessful_payment',
@@ -69,7 +69,7 @@ final class PrepareAssertAction
 
         $token = $this->tokenProvider->provideForAssert($lastPayment, $requestConfiguration);
 
-        $this->logger->debug('Synchronous processing PrepareAssertAction succeeded');
+        $this->logger->debug('Synchronous processing PrepareAssertAction succeeded for order ' . $tokenValue);
 
         return new RedirectResponse($token->getTargetUrl());
     }

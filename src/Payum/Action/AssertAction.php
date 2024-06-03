@@ -12,6 +12,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Payum\Action\Assert\SuccessfulResponseH
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Request\Assert;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Psr\Log\LoggerInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 
 final class AssertAction implements ActionInterface
@@ -20,6 +21,7 @@ final class AssertAction implements ActionInterface
         private SaferpayClientInterface $saferpayClient,
         private SuccessfulResponseHandlerInterface $successfulResponseHandler,
         private FailedResponseHandlerInterface $failedResponseHandler,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -35,6 +37,7 @@ final class AssertAction implements ActionInterface
         $response = $this->saferpayClient->assert($payment);
 
         if ($response instanceof ErrorResponse) {
+            $this->logger->error('Assert failed for payment: ' . $payment->getId(), ['response' => $response]);
             $this->failedResponseHandler->handle($payment, $response);
 
             return;

@@ -9,6 +9,7 @@ use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\GatewayAwareInterface;
 use Payum\Core\GatewayAwareTrait;
+use Psr\Log\LoggerInterface;
 use Sylius\Bundle\PayumBundle\Request\ResolveNextRoute;
 use Sylius\Bundle\PayumBundle\Request\ResolveNextRouteInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
@@ -29,8 +30,10 @@ final class ResolveNextRouteAction implements ActionInterface, GatewayAwareInter
 
     public const ADMIN_SHOW_ORDER_ROUTE = 'sylius_admin_order_show';
 
-    public function __construct(private StatusCheckerInterface $statusChecker)
-    {
+    public function __construct(
+        private StatusCheckerInterface $statusChecker,
+        private LoggerInterface $logger
+    ) {
     }
 
     /** @param ResolveNextRoute $request */
@@ -81,6 +84,7 @@ final class ResolveNextRouteAction implements ActionInterface, GatewayAwareInter
         $request->setRouteParameters([
             'tokenValue' => $this->getOrderToken($request),
         ]);
+        $this->logger->debug('Default redirect to order show page for token: ' . $this->getOrderToken($request));
     }
 
     public function supports($request): bool

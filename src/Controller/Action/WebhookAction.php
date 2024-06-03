@@ -39,7 +39,7 @@ final class WebhookAction
         try {
             $this->saferpayPaymentProcessor->lock($payment);
         } catch (PaymentBeingProcessedException|PaymentAlreadyProcessedException) {
-            $this->logger->debug('Webhook aborted - payment already processed');
+            $this->logger->debug('Webhook aborted - payment ' . $orderToken . 'already processed');
 
             return new JsonResponse(status: Response::HTTP_OK);
         }
@@ -49,12 +49,12 @@ final class WebhookAction
         try {
             $this->commandBus->dispatch(new AssertPaymentCommand($token->getHash()));
         } catch (HandlerFailedException $exception) {
-            $this->logger->debug('Webhook failed: ', ['exception' => $exception->getMessage()]);
+            $this->logger->debug('Webhook failed: ' . $orderToken, ['exception' => $exception->getMessage()]);
 
             return new JsonResponse(status: Response::HTTP_BAD_REQUEST);
         }
 
-        $this->logger->debug('Webhook handled successfully');
+        $this->logger->debug('Webhook handled ' . $orderToken . ' successfully');
 
         return new JsonResponse(status: Response::HTTP_OK);
     }
