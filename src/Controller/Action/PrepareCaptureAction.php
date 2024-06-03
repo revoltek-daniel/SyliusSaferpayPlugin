@@ -29,14 +29,14 @@ final class PrepareCaptureAction
 
     public function __invoke(Request $request, string $tokenValue): RedirectResponse
     {
-        $this->logger->debug('PrepareCaptureAction: Synchronous processing started');
+        $this->logger->debug('PrepareCaptureAction: Synchronous processing started for order ' . $tokenValue);
 
         $requestConfiguration = $this->requestConfigurationFactory->create($this->orderMetadata, $request);
 
         try {
             $lastPayment = $this->paymentProvider->provideForCapture($tokenValue);
         } catch (PaymentAlreadyProcessedException) {
-            $this->logger->debug('PrepareCaptureAction: Synchronous processing aborted - webhook handled the payment');
+            $this->logger->debug('PrepareCaptureAction: Synchronous processing aborted - webhook handled the payment ' . $tokenValue);
 
             /** @var Session $session */
             $session = $request->getSession();
@@ -47,7 +47,7 @@ final class PrepareCaptureAction
 
         $token = $this->tokenProvider->provideForCapture($lastPayment, $requestConfiguration);
 
-        $this->logger->debug('PrepareCaptureAction: Synchronous processing PrepareCaptureAction succeeded');
+        $this->logger->debug('PrepareCaptureAction: Synchronous processing PrepareCaptureAction succeeded for order ' . $tokenValue);
 
         return new RedirectResponse($token->getTargetUrl());
     }
