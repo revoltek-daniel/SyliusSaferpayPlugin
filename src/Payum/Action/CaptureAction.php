@@ -8,6 +8,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Client\SaferpayClientInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\CaptureResponse;
 use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\ErrorResponse;
 use CommerceWeavers\SyliusSaferpayPlugin\Payum\Status\StatusCheckerInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use Payum\Core\Action\ActionInterface;
 use Payum\Core\Exception\RequestNotSupportedException;
 use Payum\Core\Request\Capture;
@@ -20,7 +21,8 @@ final class CaptureAction implements ActionInterface
     public function __construct(
         private SaferpayClientInterface $saferpayClient,
         private StatusCheckerInterface $statusChecker,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
+        private EntityManagerInterface $entityManager
     ) {
     }
 
@@ -39,6 +41,15 @@ final class CaptureAction implements ActionInterface
         /** @var CaptureResponse|ErrorResponse $response */
         $response = $this->saferpayClient->capture($payment);
         if ($response instanceof ErrorResponse) {
+            if ($response->getName() === 'TRANSACTION_ALREADY_CAPTURED') {
+                $this->entityManager->refresh($payment);
+                $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured', ['details' => $payment->getDetails()]);
+
+                if ($payment->getState() === PaymentInterface::STATE_COMPLETED) {
+                    return;
+                }
+            }
+
             $this->logger->debug('Capture failed for payment: ' . $payment->getId(), ['response' => $response->toArray()]);
             $payment->setDetails(array_merge($payment->getDetails(), [
                 'status' => StatusAction::STATUS_FAILED,

@@ -75,6 +75,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service(SaferpayClientInterface::class),
             service(StatusCheckerInterface::class),
             service('monolog.logger.saferpay'),
+            service('doctrine.orm.entity_manager'),
         ])
         ->tag('payum.action', ['factory' => 'saferpay', 'alias' => 'payum.action.capture'])
     ;
