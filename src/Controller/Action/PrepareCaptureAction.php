@@ -47,7 +47,7 @@ final class PrepareCaptureAction
 
         $token = $this->tokenProvider->provideForCapture($lastPayment, $requestConfiguration);
 
-        $this->logger->debug('PrepareCaptureAction: Synchronous processing PrepareCaptureAction succeeded for order ' . $tokenValue);
+        $this->logger->debug('PrepareCaptureAction: Synchronous processing succeeded for order ' . $tokenValue);
 
         return new RedirectResponse($token->getTargetUrl());
     }
