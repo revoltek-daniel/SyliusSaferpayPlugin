@@ -39,7 +39,7 @@ final class WebhookAction
         try {
             $this->saferpayPaymentProcessor->lock($payment);
         } catch (PaymentBeingProcessedException|PaymentAlreadyProcessedException) {
-            $this->logger->debug('Webhook aborted - payment ' . $orderToken . 'already processed');
+            $this->logger->debug('Webhook aborted - payment ' . $orderToken . ' already processed');
 
             return new JsonResponse(status: Response::HTTP_OK);
         }
