@@ -40,7 +40,7 @@ final class AuthorizeAction implements ActionInterface
         $response = $this->saferpayClient->authorize($payment, $token);
 
         if ($response instanceof ErrorResponse) {
-            $this->logger->error('Authorize failed for payment: ' . $payment->getId(), ['response' => $response->toArray()]);
+            $this->logger->debug('Authorize failed for payment: ' . $payment->getId(), ['response' => $response->toArray()]);
             $payment->setDetails(array_merge($payment->getDetails(), [
                 'status' => StatusAction::STATUS_FAILED,
             ]));

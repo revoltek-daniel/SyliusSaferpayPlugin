@@ -38,7 +38,7 @@ final class AfterUnsuccessfulPaymentAction
         if ($lastPayment->getState() === PaymentInterface::STATE_NEW) {
             $this->addFlashMessageForPenultimatePayment($request, $penultimatePayment);
 
-            $this->logger->error('AfterUnsuccessfulPaymentAction: Payment failed for order ' . $tokenValue);
+            $this->logger->debug('AfterUnsuccessfulPaymentAction: Payment failed for order ' . $tokenValue);
 
             return new RedirectResponse($this->router->generate(
                 'sylius_shop_order_show',
@@ -50,7 +50,7 @@ final class AfterUnsuccessfulPaymentAction
             $this->addFlashMessage($request, 'info', 'sylius.payment.completed');
         }
 
-        $this->logger->error('AfterUnsuccessfulPaymentAction: Redirect to thankyou for order ' . $tokenValue);
+        $this->logger->debug('AfterUnsuccessfulPaymentAction: Redirect to thankyou for order ' . $tokenValue);
 
         return new RedirectResponse($this->router->generate('sylius_shop_order_thank_you'));
     }

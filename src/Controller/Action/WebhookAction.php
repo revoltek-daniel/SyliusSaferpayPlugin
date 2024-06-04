@@ -30,10 +30,10 @@ final class WebhookAction
 
     public function __invoke(Request $request): Response
     {
-        $this->logger->debug('Handling webhook started');
-
         /** @var string $orderToken */
         $orderToken = $request->attributes->get('order_token');
+        $this->logger->debug('Handling webhook started for order ' . $orderToken);
+
         $payment = $this->paymentProvider->provideForOrder($orderToken);
 
         try {
