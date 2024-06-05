@@ -43,11 +43,12 @@ final class CaptureAction implements ActionInterface
         if ($response instanceof ErrorResponse) {
             if ($response->getName() === 'TRANSACTION_ALREADY_CAPTURED') {
                 $this->entityManager->refresh($payment);
-                $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured', ['details' => $payment->getDetails()]);
 
                 if ($payment->getState() === PaymentInterface::STATE_COMPLETED) {
+                    $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured and state complete', ['details' => $payment->getDetails()]);
                     return;
                 }
+                $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured', ['state' => $payment->getState(), 'details' => $payment->getDetails()]);
             }
 
             $this->logger->debug('Capture failed for payment: ' . $payment->getId(), ['response' => $response->toArray()]);

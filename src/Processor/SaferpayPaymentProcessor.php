@@ -24,7 +24,7 @@ final class SaferpayPaymentProcessor implements SaferpayPaymentProcessorInterfac
 
     public function lock(PaymentInterface $payment, string $targetState = 'NEW'): void
     {
-        $this->logger->debug('Trying to lock payment:', ['id' => $payment->getId(), 'details' => $payment->getDetails()]);
+        $this->logger->debug('Trying to lock payment: ' . $payment->getId(), ['details' => $payment->getDetails()]);
         $lock = $this->lockFactory->createLock('payment_processing');
 
         try {
@@ -38,7 +38,7 @@ final class SaferpayPaymentProcessor implements SaferpayPaymentProcessorInterfac
         $paymentDetails = $payment->getDetails();
 
         if (!isset($paymentDetails['status'])) {
-            $this->logger->debug('Payment processing aborted - payment already processed:', ['id' => $payment->getId(), 'details' => $paymentDetails]);
+            $this->logger->debug('Payment processing aborted - payment already processed: ' . $payment->getId());
 
             throw new PaymentAlreadyProcessedException();
         }
@@ -47,7 +47,7 @@ final class SaferpayPaymentProcessor implements SaferpayPaymentProcessorInterfac
             (isset($paymentDetails['processing']) && $paymentDetails['processing'] === true) ||
             $paymentDetails['status'] !== $targetState
         ) {
-            $this->logger->debug('Payment processing aborted - payment being processed:', ['id' => $payment->getId(), 'details' => $paymentDetails]);
+            $this->logger->debug('Payment processing aborted - payment being processed: ' . $payment->getId());
 
             throw new PaymentBeingProcessedException();
         }
