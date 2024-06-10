@@ -48,6 +48,15 @@ final class CaptureAction implements ActionInterface
                     $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured and state complete', ['details' => $payment->getDetails()]);
                     return;
                 }
+
+                if ($payment->getState() === PaymentInterface::STATE_AUTHORIZED) {
+                    $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured and state authorized', ['details' => $payment->getDetails()]);
+                    $payment->setDetails(array_merge($payment->getDetails(), [
+                        'status' => StatusAction::STATUS_CAPTURED,
+                        'transaction_id' => $response->getTransactionId(),
+                    ]));
+                    return;
+                }
                 $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured', ['state' => $payment->getState(), 'details' => $payment->getDetails()]);
             }
 
