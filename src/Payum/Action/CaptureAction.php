@@ -33,8 +33,10 @@ final class CaptureAction implements ActionInterface
 
         /** @var PaymentInterface $payment */
         $payment = $request->getModel();
+        $this->logger->debug('CaptureAction: Capture started for order: ' . $payment->getId());
 
         if ($this->statusChecker->isCaptured($payment)) {
+            $this->logger->debug('CaptureAction: already captured for order: ' . $payment->getId());
             return;
         }
 
