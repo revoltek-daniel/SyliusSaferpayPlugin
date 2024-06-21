@@ -25,7 +25,7 @@ final class SaferpayPaymentProcessor implements SaferpayPaymentProcessorInterfac
     public function lock(PaymentInterface $payment, string $targetState = 'NEW'): void
     {
         $this->logger->debug('Trying to lock payment: ' . $payment->getId(), ['details' => $payment->getDetails()]);
-        $lock = $this->lockFactory->createLock('payment_processing');
+        $lock = $this->lockFactory->createLock('payment_processing' . $payment->getId());
 
         try {
             if (!$lock->acquire()) {
