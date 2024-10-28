@@ -11,7 +11,7 @@
         <field name="occurredAt" column="occurred_at" type="datetime" />
 
         <many-to-one field="payment" target-entity="Sylius\Component\Payment\Model\PaymentInterface">
-            <join-column name="payment_id" nullable="false" />
+            <join-column name="payment_id" nullable="false" on-delete="CASCADE" />
         </many-to-one>
 
         <field name="description" type="text" />
