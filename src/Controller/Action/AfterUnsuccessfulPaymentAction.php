@@ -69,7 +69,7 @@ final class AfterUnsuccessfulPaymentAction
         }
 
         if ($payment->getState() === PaymentInterface::STATE_CANCELLED) {
-            $this->addFlashMessage($request, 'info', 'sylius.payment.cancelled');
+            $this->addFlashMessage($request, 'error', 'sylius.payment.cancelled');
 
             return;
         }
