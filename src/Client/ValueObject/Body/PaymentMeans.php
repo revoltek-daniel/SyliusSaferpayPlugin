@@ -17,6 +17,7 @@ class PaymentMeans
         private ?Card $card,
         private ?BankAccount $bankAccount,
         private ?PayPal $payPal,
+        private string $wallet,
     ) {
     }
 
@@ -45,6 +46,11 @@ class PaymentMeans
         return $this->payPal;
     }
 
+    public function getWallet(): string
+    {
+        return $this->wallet;
+    }
+
     public function toArray(): array
     {
         return [
@@ -53,6 +59,7 @@ class PaymentMeans
             'Card' => $this->getCard()?->toArray(),
             'BankAccount' => $this->getBankAccount()?->toArray(),
             'PayPal' => $this->getPayPal()?->toArray(),
+            'Wallet' => $this->getWallet(),
         ];
     }
 
@@ -64,6 +71,7 @@ class PaymentMeans
             isset($data['Card']) ? Card::fromArray($data['Card']) : null,
             isset($data['BankAccount']) ? BankAccount::fromArray($data['BankAccount']) : null,
             isset($data['PayPal']) ? PayPal::fromArray($data['PayPal']) : null,
+            $data['Wallet'] ?? '',
         );
     }
 }
