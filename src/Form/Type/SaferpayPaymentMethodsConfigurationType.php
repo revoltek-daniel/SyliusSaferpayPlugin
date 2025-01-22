@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CommerceWeavers\SyliusSaferpayPlugin\Form\Type;
 
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayPaymentMethodsProviderInterface;
+use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayWalletMethodsProvider;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -14,8 +15,10 @@ use Webmozart\Assert\Assert;
 
 final class SaferpayPaymentMethodsConfigurationType extends AbstractType
 {
-    public function __construct(private SaferpayPaymentMethodsProviderInterface $paymentMethodsProvider)
-    {
+    public function __construct(
+        private SaferpayPaymentMethodsProviderInterface $paymentMethodsProvider,
+        private SaferpayWalletMethodsProvider $walletMethodsProvider
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -37,6 +40,20 @@ final class SaferpayPaymentMethodsConfigurationType extends AbstractType
                 'label' => 'commerce_weavers_saferpay.ui.allowed_payment_methods',
                 'multiple' => true,
             ])
+            ->add(
+                'allowed_wallet_methods',
+                ChoiceType::class,
+                [
+                     'choices' => $this->walletMethodsProvider->provide($paymentMethod),
+                     'data' => $this->getAllowedWalletMethodsData($paymentMethod),
+                     'choice_label' => function (string $paymentMethodData): string {
+                         return $paymentMethodData;
+                     },
+                     'expanded' => true,
+                     'label' => 'Wallets',
+                     'multiple' => true,
+                 ]
+            )
         ;
     }
 
@@ -64,5 +81,18 @@ final class SaferpayPaymentMethodsConfigurationType extends AbstractType
         }
 
         return $this->paymentMethodsProvider->provide($paymentMethod);
+    }
+
+    protected function getAllowedWalletMethodsData(PaymentMethodInterface $paymentMethod): array
+    {
+        $gatewayConfig = $paymentMethod->getGatewayConfig();
+        Assert::notNull($gatewayConfig);
+
+        $configuration = $gatewayConfig->getConfig();
+        if (isset($configuration['allowed_wallet_methods']) && \is_array($configuration['allowed_wallet_methods'])) {
+            return $configuration['allowed_wallet_methods'];
+        }
+
+        return $this->walletMethodsProvider->provide($paymentMethod);
     }
 }

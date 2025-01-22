@@ -38,6 +38,8 @@ final class SaferpayClientBodyFactory implements SaferpayClientBodyFactoryInterf
         $terminalId = (string) $config['terminal_id'];
         /** @var array $allowedPaymentMethods */
         $allowedPaymentMethods = $config['allowed_payment_methods'] ?? [];
+        /** @var array $allowedWalletMethods */
+        $allowedWalletMethods = $config['allowed_wallet_methods'] ?? [];
 
         $webhookToken = $this->tokenProvider->provideForWebhook($payment, self::COMMERCE_WEAVERS_SYLIUS_SAFERPAY_WEBHOOK);
         $notificationUrl = $this->webhookRouteGenerator->generate($webhookToken->getHash(), (string) $order->getTokenValue());
@@ -53,6 +55,7 @@ final class SaferpayClientBodyFactory implements SaferpayClientBodyFactoryInterf
                 'Description' => sprintf('Payment for order #%s', $orderNumber),
             ],
             'PaymentMethods' => array_values($allowedPaymentMethods),
+            'Wallets' => \array_values($allowedWalletMethods),
             'Notification' => [
                 'PayerEmail' => $payment->getOrder()?->getCustomer()?->getEmail(),
                 'SuccessNotifyUrl' => $notificationUrl,

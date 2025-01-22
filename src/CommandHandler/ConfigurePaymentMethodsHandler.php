@@ -26,6 +26,7 @@ final class ConfigurePaymentMethodsHandler
 
         $configuration = $gatewayConfig->getConfig();
         $configuration['allowed_payment_methods'] = $command->getPaymentMethods();
+        $configuration['allowed_wallet_methods'] = $command->getWalletMethods();
         $gatewayConfig->setConfig($configuration);
     }
 }

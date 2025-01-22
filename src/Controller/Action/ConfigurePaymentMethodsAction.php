@@ -65,7 +65,10 @@ final class ConfigurePaymentMethodsAction
             /** @var array $allowedPaymentMethods */
             $allowedPaymentMethods = $data['allowed_payment_methods'];
 
-            $this->commandBus->dispatch(new ConfigurePaymentMethods($paymentMethodId, $allowedPaymentMethods));
+            /** @var array $walletMethods */
+            $walletMethods = $data['allowed_wallet_methods'];
+
+            $this->commandBus->dispatch(new ConfigurePaymentMethods($paymentMethodId, $allowedPaymentMethods, $walletMethods));
 
             $this->addFlashMessage($request, 'success', 'sylius_saferpay.payment_method.configure_payment_methods');
 

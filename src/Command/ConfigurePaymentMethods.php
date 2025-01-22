@@ -6,7 +6,7 @@ namespace CommerceWeavers\SyliusSaferpayPlugin\Command;
 
 class ConfigurePaymentMethods
 {
-    public function __construct(private string $paymentMethodId, private array $paymentMethods)
+    public function __construct(private string $paymentMethodId, private array $paymentMethods, private array $walletMethods)
     {
     }
 
@@ -18,5 +18,10 @@ class ConfigurePaymentMethods
     public function getPaymentMethods(): array
     {
         return $this->paymentMethods;
+    }
+
+    public function getWalletMethods(): array
+    {
+        return $this->walletMethods;
     }
 }
