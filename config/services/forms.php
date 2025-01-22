@@ -5,6 +5,7 @@ declare(strict_types=1);
 use CommerceWeavers\SyliusSaferpayPlugin\Form\Type\SaferpayGatewayConfigurationType;
 use CommerceWeavers\SyliusSaferpayPlugin\Form\Type\SaferpayPaymentMethodsConfigurationType;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayPaymentMethodsProviderInterface;
+use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayWalletMethodsProvider;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -21,6 +22,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->set(SaferpayPaymentMethodsConfigurationType::class)
         ->args([
             service(SaferpayPaymentMethodsProviderInterface::class),
+            service(SaferpayWalletMethodsProvider::class),
         ])
         ->tag('form.type')
     ;

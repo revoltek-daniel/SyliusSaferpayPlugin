@@ -9,6 +9,7 @@ use CommerceWeavers\SyliusSaferpayPlugin\Provider\PaymentProvider;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\PaymentProviderInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayPaymentMethodsProvider;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayPaymentMethodsProviderInterface;
+use CommerceWeavers\SyliusSaferpayPlugin\Provider\SaferpayWalletMethodsProvider;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\UuidProvider;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\UuidProviderInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -36,6 +37,13 @@ return static function (ContainerConfigurator $containerConfigurator) {
 
     $services
         ->set(SaferpayPaymentMethodsProviderInterface::class, SaferpayPaymentMethodsProvider::class)
+        ->public()
+        ->args([
+            service(SaferpayClientInterface::class),
+        ]);
+
+    $services
+        ->set(SaferpayWalletMethodsProvider::class, SaferpayWalletMethodsProvider::class)
         ->public()
         ->args([
             service(SaferpayClientInterface::class),
