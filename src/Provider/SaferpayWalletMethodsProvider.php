@@ -26,7 +26,7 @@ class SaferpayWalletMethodsProvider implements SaferpayPaymentMethodsProviderInt
         $walletData = $terminal['Wallets'] ?? [];
 
         return array_map(
-            fn (array $paymentMethodData): mixed => $paymentMethodData['PaymentMethod'],
+            fn (array $paymentMethodData): mixed => $paymentMethodData['WalletName'],
             $walletData,
         );
     }
