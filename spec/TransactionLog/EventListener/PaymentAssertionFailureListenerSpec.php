@@ -10,7 +10,6 @@ use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\EventListener\Exception\
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\Factory\TransactionLogFactoryInterface;
 use Doctrine\Persistence\ObjectManager;
 use PhpSpec\ObjectBehavior;
-use Sylius\Calendar\Provider\DateTimeProviderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 
@@ -20,9 +19,8 @@ final class PaymentAssertionFailureListenerSpec extends ObjectBehavior
         TransactionLogFactoryInterface $transactionLogFactory,
         ObjectManager $transactionLogManager,
         PaymentRepositoryInterface $paymentRepository,
-        DateTimeProviderInterface $dateTimeProvider,
     ): void {
-        $this->beConstructedWith($transactionLogFactory, $transactionLogManager, $paymentRepository, $dateTimeProvider);
+        $this->beConstructedWith($transactionLogFactory, $transactionLogManager, $paymentRepository);
     }
 
     function it_should_persist_a_transaction_log(
@@ -31,11 +29,7 @@ final class PaymentAssertionFailureListenerSpec extends ObjectBehavior
         PaymentRepositoryInterface $paymentRepository,
         PaymentInterface $payment,
         TransactionLogInterface $transactionLog,
-        DateTimeProviderInterface $dateTimeProvider,
     ): void {
-        $now = new \DateTimeImmutable('now');
-        $dateTimeProvider->now()->willReturn($now);
-
         $paymentRepository->find(1)->willReturn($payment);
 
         $paymentAssertionFailed = new PaymentAssertionFailed(
@@ -46,7 +40,7 @@ final class PaymentAssertionFailureListenerSpec extends ObjectBehavior
         );
 
         $transactionLogFactory->createErrorLog(
-            $now,
+            new \DateTimeImmutable(),
             $payment,
             'PaymentAssertionFailed',
             [

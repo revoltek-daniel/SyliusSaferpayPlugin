@@ -9,7 +9,6 @@ use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\EventListener\Exception\
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\Factory\TransactionLogFactoryInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\Resolver\DebugModeResolverInterface;
 use Doctrine\Persistence\ObjectManager;
-use Sylius\Calendar\Provider\DateTimeProviderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 
@@ -19,7 +18,6 @@ final class PaymentRefundSuccessListener
         private TransactionLogFactoryInterface $transactionLogFactory,
         private ObjectManager $transactionLogObjectManager,
         private PaymentRepositoryInterface $paymentRepository,
-        private DateTimeProviderInterface $dateTimeProvider,
         private DebugModeResolverInterface $debugModeResolver,
     ) {
     }
@@ -39,7 +37,7 @@ final class PaymentRefundSuccessListener
         }
 
         $transactionLog = $this->transactionLogFactory->createInformationalLog(
-            $this->dateTimeProvider->now(),
+            new \DateTimeImmutable(),
             $payment,
             'Payment refund authorization succeeded',
             [

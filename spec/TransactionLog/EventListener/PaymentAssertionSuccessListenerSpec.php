@@ -11,7 +11,6 @@ use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\Factory\TransactionLogFa
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\Resolver\DebugModeResolverInterface;
 use Doctrine\Persistence\ObjectManager;
 use PhpSpec\ObjectBehavior;
-use Sylius\Calendar\Provider\DateTimeProviderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
 
@@ -21,14 +20,12 @@ final class PaymentAssertionSuccessListenerSpec extends ObjectBehavior
         TransactionLogFactoryInterface $transactionLogFactory,
         ObjectManager $transactionLogManager,
         PaymentRepositoryInterface $paymentRepository,
-        DateTimeProviderInterface $dateTimeProvider,
         DebugModeResolverInterface $debugModeResolver,
     ): void {
         $this->beConstructedWith(
             $transactionLogFactory,
             $transactionLogManager,
             $paymentRepository,
-            $dateTimeProvider,
             $debugModeResolver,
         );
     }
@@ -37,12 +34,8 @@ final class PaymentAssertionSuccessListenerSpec extends ObjectBehavior
         TransactionLogFactoryInterface $transactionLogFactory,
         PaymentRepositoryInterface $paymentRepository,
         PaymentInterface $payment,
-        DateTimeProviderInterface $dateTimeProvider,
         DebugModeResolverInterface $debugModeResolver,
     ): void {
-        $now = new \DateTimeImmutable('now');
-        $dateTimeProvider->now()->willReturn($now);
-
         $paymentRepository->find(1)->willReturn($payment);
 
         $debugModeResolver->isEnabled($payment)->willReturn(false);
@@ -56,12 +49,8 @@ final class PaymentAssertionSuccessListenerSpec extends ObjectBehavior
         PaymentRepositoryInterface $paymentRepository,
         PaymentInterface $payment,
         TransactionLogInterface $transactionLog,
-        DateTimeProviderInterface $dateTimeProvider,
         DebugModeResolverInterface $debugModeResolver,
     ): void {
-        $now = new \DateTimeImmutable('now');
-        $dateTimeProvider->now()->willReturn($now);
-
         $paymentRepository->find(1)->willReturn($payment);
 
         $debugModeResolver->isEnabled($payment)->willReturn(true);
@@ -74,7 +63,7 @@ final class PaymentAssertionSuccessListenerSpec extends ObjectBehavior
         );
 
         $transactionLogFactory->createInformationalLog(
-            $now,
+            new \DateTimeImmutable(),
             $payment,
             'Payment assertion succeeded',
             [

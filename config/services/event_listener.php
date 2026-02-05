@@ -10,7 +10,6 @@ use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\EventListener\PaymentCap
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\EventListener\PaymentCaptureSuccessListener;
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\EventListener\PaymentRefundSuccessListener;
 use CommerceWeavers\SyliusSaferpayPlugin\TransactionLog\Resolver\DebugModeResolverInterface;
-use Sylius\Calendar\Provider\DateTimeProviderInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -22,7 +21,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
     ;
@@ -32,7 +30,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
             service(DebugModeResolverInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
@@ -43,7 +40,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
             service(DebugModeResolverInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
@@ -54,7 +50,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
             service(DebugModeResolverInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
@@ -65,7 +60,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
             service(DebugModeResolverInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
@@ -76,7 +70,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
             service(DebugModeResolverInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
@@ -87,7 +80,6 @@ return static function (ContainerConfigurator $containerConfigurator) {
             service('commerce_weavers_saferpay.factory.transaction_log'),
             service('commerce_weavers_saferpay.manager.transaction_log'),
             service('sylius.repository.payment'),
-            service(DateTimeProviderInterface::class),
             service(DebugModeResolverInterface::class),
         ])
         ->tag('messenger.message_handler', ['bus' => 'sylius.event_bus'])
