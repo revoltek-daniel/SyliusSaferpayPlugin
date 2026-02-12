@@ -18,7 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator) {
         ->args([
             service(TokenProviderInterface::class),
             service('payum'),
-            service('sylius.factory.payum_get_status_action'),
+            service('sylius_payum.factory.get_status'),
             service(RefundFactoryInterface::class),
         ])
     ;
