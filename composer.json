@@ -5,16 +5,16 @@
     "keywords": ["sylius", "sylius-plugin", "worldline", "saferpay", "payment", "payment-gateway"],
     "license": "proprietary",
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "php-http/message-factory": "^1.1",
         "ramsey/uuid": "^3.9||^4.0",
-        "sylius/mailer-bundle": "^1.8 || ^2.0",
-        "sylius/sylius": "~1.12.0 || ~1.13.0 || ~1.14.0 || ~2.0",
-        "symfony/http-client": "5.4.* || ^6.0 || ^7.0",
-        "symfony/lock": "5.4.* || ^6.0 || ^7.0",
-        "symfony/messenger": "5.4.* || ^6.0 || ^7.0",
-        "symfony/uid": "5.4.* || ^6.0 || ^7.0",
-        "symfony/webpack-encore-bundle": "^1.15 || ~2.0"
+        "sylius/mailer-bundle": "^2.0",
+        "sylius/sylius": "~2.2.0",
+        "symfony/http-client": "^6.4 || ^7.1",
+        "symfony/lock": "^6.4 || ^7.1",
+        "symfony/messenger": "^6.4 || ^7.1",
+        "symfony/uid": "^6.4 || ^7.1",
+        "symfony/webpack-encore-bundle": "~2.0"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
@@ -30,9 +30,9 @@
         "friends-of-behat/symfony-extension": "^2.1",
         "friends-of-behat/variadic-extension": "^1.3",
         "lchrusciel/api-test-case": "^5.2",
-        "matthiasnoback/symfony-config-test": "^4.3",
-        "matthiasnoback/symfony-dependency-injection-test": "^4.3",
-        "phpspec/phpspec": "^7.2",
+        "matthiasnoback/symfony-config-test": "^5.2",
+        "matthiasnoback/symfony-dependency-injection-test": "^5.1",
+        "phpspec/phpspec": "^8.2",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^1.8.1",
         "phpstan/phpstan-doctrine": "1.3.65",
@@ -41,18 +41,21 @@
         "phpunit/phpunit": "^9.5",
         "polishsymfonycommunity/symfony-mocker-container": "^1.0",
         "sylius-labs/coding-standard": "^4.2",
-        "symfony/browser-kit": "^5.4 || ^6.0 || ^7.0",
-        "symfony/debug-bundle": "^5.4 || ^6.0 || ^7.0",
-        "symfony/dotenv": "^5.4 || ^6.0 || ^7.0",
+        "symfony/browser-kit": "^6.4 || ^7.1",
+        "symfony/debug-bundle": "^6.4 || ^7.1",
+        "symfony/dotenv": "^6.4 || ^7.1",
         "symfony/flex": "^2.2.2",
-        "symfony/intl": "^5.4 || ^6.0 || ^7.0",
+        "symfony/intl": "^6.4 || ^7.1",
         "symfony/panther": "^2.0",
-        "symfony/web-profiler-bundle": "^5.4 || ^6.0 || ^7.0",
+        "symfony/web-profiler-bundle": "^6.4 || ^7.1",
         "theofidry/alice-data-fixtures": "^1.5",
-        "vimeo/psalm": "5.23.1"
+        "vimeo/psalm": "^6.0"
     },
     "conflict": {
         "behat/mink-selenium2-driver": ">=1.7.0"
+    },
+    "suggest": {
+        "winzou/state-machine-bundle": "Required if you want the automatic refund transition callback to fire. Without it, the plugin falls back to a no-op and you have to trigger saferpay refunds yourself."
     },
     "config": {
         "sort-packages": true,
@@ -61,11 +64,15 @@
             "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/thanks": false
+        },
+        "audit": {
+            "abandoned": "ignore",
+            "ignore": ["PKSA-365x-2zjk-pt47", "PKSA-b35n-565h-rs4q"]
         }
     },
     "extra": {
         "symfony": {
-            "require": "5.4.*"
+            "require": "7.4.*"
         }
     },
     "autoload": {

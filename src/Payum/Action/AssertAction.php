@@ -21,7 +21,7 @@ final class AssertAction implements ActionInterface
         private SaferpayClientInterface $saferpayClient,
         private SuccessfulResponseHandlerInterface $successfulResponseHandler,
         private FailedResponseHandlerInterface $failedResponseHandler,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

@@ -3,5 +3,5 @@
 {% block title %}{{ 'commerce_weavers_saferpay.ui.configure_saferpay_payment_methods'|trans() }} {{ parent() }}{% endblock %}
 
 {% block content %}
-    {{ sylius_template_event('commerce_weavers_saferpay.admin.payment_method.configure_payment_methods', _context) }}
+    {% hook 'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods' %}
 {% endblock %}

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CommerceWeavers\SyliusSaferpayPlugin\Provider;
 
 use CommerceWeavers\SyliusSaferpayPlugin\Client\SaferpayClientInterface;
@@ -9,7 +11,7 @@ use Webmozart\Assert\Assert;
 class SaferpayWalletMethodsProvider implements SaferpayPaymentMethodsProviderInterface
 {
     public function __construct(
-        private SaferpayClientInterface $client
+        private SaferpayClientInterface $client,
     ) {
     }
 

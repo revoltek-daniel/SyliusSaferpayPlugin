@@ -32,7 +32,7 @@ final class ResolveNextRouteAction implements ActionInterface, GatewayAwareInter
 
     public function __construct(
         private StatusCheckerInterface $statusChecker,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

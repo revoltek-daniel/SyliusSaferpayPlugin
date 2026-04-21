@@ -19,3 +19,28 @@
 # Symfony CLI https://symfony.com/doc/current/setup/symfony_server.html#different-php-settings-per-project
 /.php-version
 /php.ini
+
+# Symfony Flex recipe artifacts — they target a full app, not a plugin directory.
+# Only plugin-owned configs (events.php, monolog.php, sylius_grid.php, lock.yaml,
+# state_machine/) are tracked; everything else here is ignored.
+/.env
+/.env.*
+!/.env.dist
+/compose.override.yaml
+/var/
+/config/bundles.php
+/config/routes/
+/config/packages/api_platform.yaml
+/config/packages/csrf.yaml
+/config/packages/flysystem.yaml
+/config/packages/http_discovery.yaml
+/config/packages/mailer.yaml
+/config/packages/property_info.yaml
+/config/packages/twig_component.yaml
+/config/packages/ux_icons.yaml
+/config/packages/workflow.yaml
+/assets/controllers.json
+/assets/controllers/
+/assets/icons/
+/assets/stimulus_bootstrap.js
+/src/ApiResource/

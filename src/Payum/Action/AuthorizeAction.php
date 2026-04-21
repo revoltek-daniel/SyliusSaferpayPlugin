@@ -18,7 +18,7 @@ final class AuthorizeAction implements ActionInterface
 {
     public function __construct(
         private SaferpayClientInterface $saferpayClient,
-        private LoggerInterface $logger
+        private LoggerInterface $logger,
     ) {
     }
 

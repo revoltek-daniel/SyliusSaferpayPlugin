@@ -17,7 +17,7 @@ final class SaferpayPaymentMethodsConfigurationType extends AbstractType
 {
     public function __construct(
         private SaferpayPaymentMethodsProviderInterface $paymentMethodsProvider,
-        private SaferpayWalletMethodsProvider $walletMethodsProvider
+        private SaferpayWalletMethodsProvider $walletMethodsProvider,
     ) {
     }
 
@@ -52,7 +52,7 @@ final class SaferpayPaymentMethodsConfigurationType extends AbstractType
                      'expanded' => true,
                      'label' => 'Wallets',
                      'multiple' => true,
-                 ]
+                 ],
             )
         ;
     }
@@ -70,19 +70,6 @@ final class SaferpayPaymentMethodsConfigurationType extends AbstractType
         return 'commerce_weavers_sylius_saferpay_payment_methods_configuration';
     }
 
-    private function getAllowedPaymentMethodsData(PaymentMethodInterface $paymentMethod): array
-    {
-        $gatewayConfig = $paymentMethod->getGatewayConfig();
-        Assert::notNull($gatewayConfig);
-
-        $configuration = $gatewayConfig->getConfig();
-        if (isset($configuration['allowed_payment_methods']) && \is_array($configuration['allowed_payment_methods'])) {
-            return $configuration['allowed_payment_methods'];
-        }
-
-        return $this->paymentMethodsProvider->provide($paymentMethod);
-    }
-
     protected function getAllowedWalletMethodsData(PaymentMethodInterface $paymentMethod): array
     {
         $gatewayConfig = $paymentMethod->getGatewayConfig();
@@ -94,5 +81,18 @@ final class SaferpayPaymentMethodsConfigurationType extends AbstractType
         }
 
         return $this->walletMethodsProvider->provide($paymentMethod);
+    }
+
+    private function getAllowedPaymentMethodsData(PaymentMethodInterface $paymentMethod): array
+    {
+        $gatewayConfig = $paymentMethod->getGatewayConfig();
+        Assert::notNull($gatewayConfig);
+
+        $configuration = $gatewayConfig->getConfig();
+        if (isset($configuration['allowed_payment_methods']) && \is_array($configuration['allowed_payment_methods'])) {
+            return $configuration['allowed_payment_methods'];
+        }
+
+        return $this->paymentMethodsProvider->provide($paymentMethod);
     }
 }

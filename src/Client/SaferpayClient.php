@@ -12,10 +12,10 @@ use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\RefundResponse;
 use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\ResponseInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Payment\EventDispatcher\PaymentEventDispatcherInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Resolver\SaferpayApiBaseUrlResolverInterface;
-use Payum\Core\Model\GatewayConfigInterface;
 use Payum\Core\Security\TokenInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Payment\Model\GatewayConfigInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -235,8 +235,11 @@ final class SaferpayClient implements SaferpayClientInterface
 
     public function getTerminal(GatewayConfigInterface $gatewayConfig): array
     {
-        $customerId = (string) $gatewayConfig->getConfig()['customer_id'];
-        $terminalId = (string) $gatewayConfig->getConfig()['terminal_id'];
+        $config = $gatewayConfig->getConfig();
+        /** @var string $customerId */
+        $customerId = $config['customer_id'];
+        /** @var string $terminalId */
+        $terminalId = $config['terminal_id'];
 
         $result = $this->request(
             'GET',
@@ -287,8 +290,11 @@ final class SaferpayClient implements SaferpayClientInterface
 
     private function provideHeaders(GatewayConfigInterface $gatewayConfig): array
     {
-        $username = (string) $gatewayConfig->getConfig()['username'];
-        $password = (string) $gatewayConfig->getConfig()['password'];
+        $config = $gatewayConfig->getConfig();
+        /** @var string $username */
+        $username = $config['username'];
+        /** @var string $password */
+        $password = $config['password'];
 
         return [
             'Authorization' => 'Basic ' . base64_encode($username . ':' . $password),

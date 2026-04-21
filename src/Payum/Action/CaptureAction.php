@@ -22,7 +22,7 @@ final class CaptureAction implements ActionInterface
         private SaferpayClientInterface $saferpayClient,
         private StatusCheckerInterface $statusChecker,
         private LoggerInterface $logger,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -37,6 +37,7 @@ final class CaptureAction implements ActionInterface
 
         if ($this->statusChecker->isCaptured($payment)) {
             $this->logger->debug('CaptureAction: already captured for order: ' . $payment->getId());
+
             return;
         }
 
@@ -48,6 +49,7 @@ final class CaptureAction implements ActionInterface
 
                 if ($payment->getState() === PaymentInterface::STATE_COMPLETED) {
                     $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured and state complete', ['details' => $payment->getDetails()]);
+
                     return;
                 }
 
@@ -57,6 +59,7 @@ final class CaptureAction implements ActionInterface
                         'status' => StatusAction::STATUS_CAPTURED,
                         'transaction_id' => $response->getTransactionId(),
                     ]));
+
                     return;
                 }
                 $this->logger->debug('Capture failed for payment: ' . $payment->getId() . ' already captured', ['state' => $payment->getState(), 'details' => $payment->getDetails()]);
