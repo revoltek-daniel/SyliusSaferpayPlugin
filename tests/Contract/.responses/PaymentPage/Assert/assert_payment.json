@@ -1,6 +1,6 @@
 {
   "ResponseHeader": {
-    "SpecVersion": "1.33",
+    "SpecVersion": "1.51",
     "RequestId": "@string@"
   },
   "Transaction": {

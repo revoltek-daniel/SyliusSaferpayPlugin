@@ -18,7 +18,7 @@ final class RefundResponseTest extends TestCase
         $response = RefundResponse::fromArray([
             'StatusCode' => 200,
             'ResponseHeader' => [
-                'SpecVersion' => '1.33',
+                'SpecVersion' => '1.51',
                 'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
             ],
             'Transaction' => [
@@ -62,7 +62,7 @@ final class RefundResponseTest extends TestCase
 
     private function assertResponseHeader(ResponseHeader $responseHeader): void
     {
-        $this->assertEquals('1.33', $responseHeader->getSpecVersion());
+        $this->assertEquals('1.51', $responseHeader->getSpecVersion());
         $this->assertEquals('b27de121-ffa0-4f1d-b7aa-b48109a88486', $responseHeader->getRequestId());
     }
 

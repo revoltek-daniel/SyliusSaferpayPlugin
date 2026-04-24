@@ -89,7 +89,7 @@ abstract class SaferpayApiTestCase extends JsonApiTestCase
     {
         return [
             "RequestHeader" => [
-                "SpecVersion" => "1.33",
+                "SpecVersion" => "1.51",
                 "CustomerId" => "268229",
                 "RequestId" => Uuid::uuid4(),
                 "RetryIndicator" => 0
@@ -102,7 +102,7 @@ abstract class SaferpayApiTestCase extends JsonApiTestCase
     {
         return [
             "RequestHeader" => [
-                "SpecVersion" => "1.33",
+                "SpecVersion" => "1.51",
                 "CustomerId" => "268229",
                 "RequestId" => "3358af17-35c1-4165-a343-c1c86a320f3b",
                 "RetryIndicator" => 0
@@ -126,7 +126,7 @@ abstract class SaferpayApiTestCase extends JsonApiTestCase
     {
         return [
             "RequestHeader" => [
-                "SpecVersion" => "1.33",
+                "SpecVersion" => "1.51",
                 "CustomerId" => "268229",
                 "RequestId" => "3358af17-35c1-4165-a343-c1c86a320f3b",
                 "RetryIndicator" => 0
@@ -141,7 +141,7 @@ abstract class SaferpayApiTestCase extends JsonApiTestCase
     {
         return [
             "RequestHeader" => [
-                "SpecVersion" => "1.33",
+                "SpecVersion" => "1.51",
                 "CustomerId" => "268229",
                 "RequestId" => "3358af17-35c1-4165-a343-c1c86a320f3b",
                 "RetryIndicator" => 0
