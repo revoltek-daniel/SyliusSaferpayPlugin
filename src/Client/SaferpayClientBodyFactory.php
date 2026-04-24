@@ -15,7 +15,7 @@ use Webmozart\Assert\Assert;
 
 final class SaferpayClientBodyFactory implements SaferpayClientBodyFactoryInterface
 {
-    private const SPEC_VERSION = '1.33';
+    private const SPEC_VERSION = '1.51';
 
     private const COMMERCE_WEAVERS_SYLIUS_SAFERPAY_WEBHOOK = 'commerce_weavers_sylius_saferpay_webhook';
 

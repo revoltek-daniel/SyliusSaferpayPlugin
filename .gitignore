@@ -19,3 +19,23 @@
 # Symfony CLI https://symfony.com/doc/current/setup/symfony_server.html#different-php-settings-per-project
 /.php-version
 /php.ini
+
+# Local scaffolding from running host app in repo root (see CLAUDE.md)
+/compose.override.yaml
+/var/
+/config/bundles.php
+/config/packages/api_platform.yaml
+/config/packages/csrf.yaml
+/config/packages/flysystem.yaml
+/config/packages/http_discovery.yaml
+/config/packages/mailer.yaml
+/config/packages/property_info.yaml
+/config/packages/twig_component.yaml
+/config/packages/ux_icons.yaml
+/config/packages/workflow.yaml
+/config/routes/
+/src/ApiResource/
+/assets/controllers.json
+/assets/controllers/
+/assets/icons/
+/assets/stimulus_bootstrap.js

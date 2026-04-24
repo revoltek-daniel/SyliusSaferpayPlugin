@@ -16,7 +16,7 @@ final class ErrorResponseTest extends TestCase
         $response = ErrorResponse::forAssert([
             'StatusCode' => 402,
             'ResponseHeader' => [
-                'SpecVersion' => '1.33',
+                'SpecVersion' => '1.51',
                 'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
             ],
             'Behavior' => 'DO_NOT_RETRY',
@@ -44,7 +44,7 @@ final class ErrorResponseTest extends TestCase
         $response = ErrorResponse::forCapture([
             'StatusCode' => 402,
             'ResponseHeader' => [
-                'SpecVersion' => '1.33',
+                'SpecVersion' => '1.51',
                 'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
             ],
             "Behavior" => "DO_NOT_RETRY",
@@ -66,7 +66,7 @@ final class ErrorResponseTest extends TestCase
         $response = ErrorResponse::forAuthorize([
             'StatusCode' => 402,
             'ResponseHeader' => [
-                'SpecVersion' => '1.33',
+                'SpecVersion' => '1.51',
                 'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
             ],
             "Behavior" => "DO_NOT_RETRY",
@@ -92,7 +92,7 @@ final class ErrorResponseTest extends TestCase
         $response = ErrorResponse::forRefund([
             'StatusCode' => 402,
             'ResponseHeader' => [
-                'SpecVersion' => '1.33',
+                'SpecVersion' => '1.51',
                 'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
             ],
             "Behavior" => "DO_NOT_RETRY",
@@ -110,7 +110,7 @@ final class ErrorResponseTest extends TestCase
 
     private function assertResponseHeader(ResponseHeader $responseHeader): void
     {
-        $this->assertEquals('1.33', $responseHeader->getSpecVersion());
+        $this->assertEquals('1.51', $responseHeader->getSpecVersion());
         $this->assertEquals('b27de121-ffa0-4f1d-b7aa-b48109a88486', $responseHeader->getRequestId());
     }
 }
