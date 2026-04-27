@@ -1,3 +1,5 @@
+{% set paths = hookable_metadata.context.paths|default({}) %}
+
 <div class="d-flex gap-2 mt-3">
     <button class="btn btn-primary d-flex align-items-center gap-1" type="submit" id="sylius_save_changes_button">
         {{ ux_icon('tabler:device-floppy') }}

@@ -1,5 +1,7 @@
 {% import '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' as breadcrumb %}
 
+{% set payment_method = hookable_metadata.context.payment_method %}
+
 {% set items = [
     { name: 'sylius.ui.administration', url: path('sylius_admin_dashboard') },
     { name: 'sylius.ui.payment_methods', url: path('sylius_admin_payment_method_index') },

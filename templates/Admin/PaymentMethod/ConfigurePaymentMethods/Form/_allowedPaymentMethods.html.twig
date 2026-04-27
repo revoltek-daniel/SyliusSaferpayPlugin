@@ -1,3 +1,5 @@
+{% set form = hookable_metadata.context.form %}
+
 {{ form_row(form.allowed_payment_methods) }}
 {{ form_row(form.allowed_wallet_methods) }}
 
