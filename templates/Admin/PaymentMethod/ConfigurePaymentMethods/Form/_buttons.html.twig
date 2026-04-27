@@ -1,7 +1,7 @@
-<div class="ui hidden divider"></div>
-<div class="ui buttons">
-    <button class="ui labeled icon primary button" type="submit" id="sylius_save_changes_button">
-        <i class="save icon"></i> {{ 'sylius.ui.save_changes'|trans }}
+<div class="d-flex gap-2 mt-3">
+    <button class="btn btn-primary d-flex align-items-center gap-1" type="submit" id="sylius_save_changes_button">
+        {{ ux_icon('tabler:device-floppy') }}
+        {{ 'sylius.ui.save_changes'|trans }}
     </button>
     <a href="{{ paths.cancel|default(path('sylius_admin_payment_method_index')) }}" class="btn btn-secondary">{{ 'sylius.ui.cancel'|trans }}</a>
 </div>
