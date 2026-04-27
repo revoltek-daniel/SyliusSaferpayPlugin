@@ -2,12 +2,12 @@
 {{ form_errors(form) }}
 
 {% if form.children.allowed_payment_methods.vars.value is empty %}
-    <div class="ui icon info message">
-        <i class="info circle icon"></i>
-        <div class="content">{{ 'commerce_weavers_saferpay.form.configure_payment_methods.empty_list'|trans }}</div>
+    <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+        {{ ux_icon('tabler:info-circle') }}
+        <div>{{ 'commerce_weavers_saferpay.form.configure_payment_methods.empty_list'|trans }}</div>
     </div>
 {% else %}
-    {% hook 'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.form.content' with { form } %}
+    {% hook 'content' with { form } %}
 {% endif %}
 
 {{ form_row(form._token) }}

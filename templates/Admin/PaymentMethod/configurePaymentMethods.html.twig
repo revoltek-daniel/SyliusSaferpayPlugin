@@ -1,7 +1,12 @@
 {% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
 
+{% set prefixes = [
+    'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods',
+    'sylius_admin.common.show',
+] %}
+
 {% block title %}{{ 'commerce_weavers_saferpay.ui.configure_saferpay_payment_methods'|trans }} | {{ parent() }}{% endblock %}
 
 {% block body %}
-    {% hook 'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods' %}
+    {% hook 'show' with { _prefixes: prefixes, payment_method, form } %}
 {% endblock %}
