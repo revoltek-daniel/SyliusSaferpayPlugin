@@ -1,16 +1,23 @@
 {% set form = hookable_metadata.context.form %}
+{% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
 
-{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-{{ form_errors(form) }}
+<div class="container-xl">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="card">
+            <div class="card-body">
+                {{ form_errors(form) }}
 
-{% if form.children.allowed_payment_methods.vars.value is empty %}
-    <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
-        {{ ux_icon('tabler:info-circle') }}
-        <div>{{ 'commerce_weavers_saferpay.form.configure_payment_methods.empty_list'|trans }}</div>
-    </div>
-{% else %}
-    {% hook 'saferpay_form' with { form } %}
-{% endif %}
+                {% if form.children.allowed_payment_methods.vars.value is empty %}
+                    <div class="alert alert-info d-flex align-items-center gap-2" role="alert">
+                        {{ ux_icon('tabler:info-circle') }}
+                        <div>{{ 'commerce_weavers_saferpay.form.configure_payment_methods.empty_list'|trans }}</div>
+                    </div>
+                {% else %}
+                    {% hook 'saferpay_form' with { form } %}
+                {% endif %}
 
-{{ form_row(form._token) }}
-{{ form_end(form, {'render_rest': false}) }}
+                {{ form_row(form._token) }}
+            </div>
+        </div>
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

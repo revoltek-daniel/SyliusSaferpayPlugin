@@ -25,6 +25,18 @@ return static function (ContainerConfigurator $containerConfigurator) {
                     'priority' => -100,
                 ],
             ],
+            'sylius_admin.payment_method.update.content.form.sections.gateway_configuration.saferpay' => [
+                'config' => [
+                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/_gatewayConfiguration.html.twig',
+                    'priority' => 0,
+                ],
+            ],
+            'sylius_admin.payment_method.create.content.form.sections.gateway_configuration.saferpay' => [
+                'config' => [
+                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/_gatewayConfiguration.html.twig',
+                    'priority' => 0,
+                ],
+            ],
             'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.header' => [
                 'breadcrumbs' => [
                     'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Header/_breadcrumb.html.twig',
