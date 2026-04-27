@@ -25,25 +25,25 @@ return static function (ContainerConfigurator $containerConfigurator) {
                     'priority' => -100,
                 ],
             ],
-            'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.header.title_block.title' => [
-                'title' => [
-                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Header/_headerTitle.html.twig',
-                    'priority' => 0,
-                ],
-            ],
-            'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.header.breadcrumbs' => [
+            'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.header' => [
                 'breadcrumbs' => [
                     'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Header/_breadcrumb.html.twig',
+                    'priority' => 100,
+                ],
+            ],
+            'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.header.title_block' => [
+                'title' => [
+                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Header/_headerTitle.html.twig',
                     'priority' => 0,
                 ],
             ],
             'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content' => [
                 'saferpay_form' => [
                     'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Form/_content.html.twig',
-                    'priority' => 100,
+                    'priority' => 50,
                 ],
             ],
-            'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.saferpay_form.content' => [
+            'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.saferpay_form' => [
                 'allowed_payment_methods' => [
                     'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Form/_allowedPaymentMethods.html.twig',
                     'priority' => 20,

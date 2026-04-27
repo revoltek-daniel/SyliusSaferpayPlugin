@@ -9,7 +9,7 @@
         <div>{{ 'commerce_weavers_saferpay.form.configure_payment_methods.empty_list'|trans }}</div>
     </div>
 {% else %}
-    {% hook 'content' with { form } %}
+    {% hook 'saferpay_form' with { form } %}
 {% endif %}
 
 {{ form_row(form._token) }}
