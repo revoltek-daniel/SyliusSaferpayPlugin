@@ -1,0 +1,11 @@
+{% set transaction_log = hookable_metadata.context.transaction_log %}
+
+<div class="col-12 col-md-6">
+    <div class="d-md-flex gap-2 align-items-center">
+        <h1 class="page-title d-flex align-items-center gap-2">
+            {{ ux_icon('tabler:box') }}
+            <span>{{ 'commerce_weavers_saferpay.ui.transaction_log'|trans }}</span>
+            <small class="text-muted">{{ transaction_log.id }}</small>
+        </h1>
+    </div>
+</div>

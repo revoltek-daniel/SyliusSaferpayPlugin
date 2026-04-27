@@ -37,6 +37,24 @@ return static function (ContainerConfigurator $containerConfigurator) {
                     'priority' => 0,
                 ],
             ],
+            'commerce_weavers_saferpay.admin.transaction_log.show.content.header' => [
+                'breadcrumbs' => [
+                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/TransactionLogs/Show/Header/_breadcrumbs.html.twig',
+                    'priority' => 100,
+                ],
+            ],
+            'commerce_weavers_saferpay.admin.transaction_log.show.content.header.title_block' => [
+                'title' => [
+                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/TransactionLogs/Show/Header/_title.html.twig',
+                    'priority' => 0,
+                ],
+            ],
+            'commerce_weavers_saferpay.admin.transaction_log.show.content' => [
+                'transaction_log_details' => [
+                    'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/TransactionLogs/Show/_content.html.twig',
+                    'priority' => 50,
+                ],
+            ],
             'commerce_weavers_saferpay.admin.payment_method.configure_payment_methods.show.content.header' => [
                 'breadcrumbs' => [
                     'template' => '@CommerceWeaversSyliusSaferpayPlugin/Admin/PaymentMethod/ConfigurePaymentMethods/Header/_breadcrumb.html.twig',

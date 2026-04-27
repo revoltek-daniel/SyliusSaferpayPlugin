@@ -1,54 +1,12 @@
 {% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
 
-{% block title %}{{ 'commerce_weavers_saferpay.ui.transaction_logs'|trans }} | {{ parent() }}{% endblock %}
+{% set prefixes = [
+    'commerce_weavers_saferpay.admin.transaction_log',
+    'sylius_admin.common',
+] %}
+
+{% block title %}{{ 'commerce_weavers_saferpay.ui.transaction_log'|trans }} | {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container-fluid py-3">
-        <div class="row mb-3">
-            <div class="col">
-                <h1 class="h2 d-flex align-items-center gap-2">
-                    {{ ux_icon('tabler:box') }}
-                    <span>{{ 'commerce_weavers_saferpay.ui.transaction_log'|trans }}</span>
-                    <small class="text-muted">{{ transaction_log.id }}</small>
-                </h1>
-                {% import '@SyliusAdmin/shared/helper/breadcrumbs.html.twig' as breadcrumb %}
-
-                {% set items = [
-                    { name: 'sylius.ui.administration', url: path('sylius_admin_dashboard') },
-                    { name: 'commerce_weavers_saferpay.ui.transaction_logs', url: path('commerce_weavers_saferpay_admin_transaction_log_index') },
-                    { name: resource.name|default(resource.id), active: true }
-                ] %}
-
-                {{ breadcrumb.breadcrumbs(items) }}
-            </div>
-        </div>
-
-        <div class="row g-3">
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="border-bottom pb-2">{{ 'commerce_weavers_saferpay.ui.type'|trans }}</h4>
-                        <p {{ sylius_test_html_attribute('log-type') }}>{{ ('commerce_weavers_saferpay.ui.type_' ~ transaction_log.type)|trans }}</p>
-
-                        <h4 class="border-bottom pb-2">{{ 'commerce_weavers_saferpay.ui.occurred_at'|trans }}</h4>
-                        <p>{{ transaction_log.occurredAt|date('Y-m-d H:i:s') }}</p>
-
-                        <h4 class="border-bottom pb-2">{{ 'commerce_weavers_saferpay.ui.description'|trans }}</h4>
-                        <p {{ sylius_test_html_attribute('description') }}>{{ transaction_log.description }}</p>
-
-                        <h4 class="border-bottom pb-2">{{ 'commerce_weavers_saferpay.ui.payment_id'|trans }}</h4>
-                        <p>{{ transaction_log.payment.id }} ({{ 'sylius.ui.order'|trans }}: <a href="{{ path('sylius_admin_order_show', {'id': transaction_log.payment.order.id })}}">#{{ transaction_log.payment.order.number }}</a>)</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="border-bottom pb-2">{{ 'commerce_weavers_saferpay.ui.context'|trans }}</h4>
-                        <pre {{ sylius_test_html_attribute('context') }}>{{ transaction_log.context|json_encode(constant('JSON_PRETTY_PRINT'))|trim|raw }}</pre>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% hook 'show' with { _prefixes: prefixes, transaction_log: transaction_log, resource: resource|default(null) } %}
 {% endblock %}
