@@ -2,7 +2,7 @@ commerce_weavers_saferpay_transaction_log:
     resource: |
         alias: commerce_weavers_saferpay.transaction_log
         section: admin
-        templates: "@SyliusAdmin\\Crud"
+        templates: "@SyliusAdmin\\shared\\crud"
         only: ['index', 'show']
         redirect: update
         grid: commerce_weavers_saferpay_transaction_log
