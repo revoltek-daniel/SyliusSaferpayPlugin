@@ -161,6 +161,59 @@ final class AssertResponseTest extends TestCase
         $this->assertTrue($response->isSuccessful());
     }
 
+    /** @test */
+    public function it_creates_assert_response_vo_from_array_when_three_ds_has_only_authenticated_field(): void
+    {
+        $response = AssertResponse::fromArray([
+            'StatusCode' => 200,
+            'ResponseHeader' => [
+                'SpecVersion' => '1.51',
+                'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
+            ],
+            'Transaction' => [
+                'Type' => 'PAYMENT',
+                'Status' => 'AUTHORIZED',
+                'Id' => '723n4MAjMdhjSAhAKEUdA8jtl9jb',
+                'Date' => '2015-01-30T12:45:22.258+01:00',
+                'Amount' => [
+                    'Value' => '100',
+                    'CurrencyCode' => 'CHF',
+                ],
+                'OrderId' => '000000001',
+                'AcquirerName' => 'Saferpay Test Card',
+                'AcquirerReference' => '000000',
+                'SixTransactionReference' => '0:0:3:723n4MAjMdhjSAhAKEUdA8jtl9jb',
+                'ApprovalCode' => '012345',
+            ],
+            'PaymentMeans' => [
+                'Brand' => [
+                    'PaymentMethod' => 'VISA',
+                    'Name' => 'VISA Saferpay Test',
+                ],
+                'DisplayText' => '9123 45xx xxxx 1234',
+                'Card' => [
+                    'MaskedNumber' => '912345xxxxxx1234',
+                    'ExpYear' => 2015,
+                    'ExpMonth' => 9,
+                    'HolderName' => 'Max Mustermann',
+                    'CountryCode' => 'CH',
+                ],
+            ],
+            'Liability' => [
+                'LiabilityShift' => false,
+                'LiableEntity' => 'MERCHANT',
+                'ThreeDs' => [
+                    'Authenticated' => false,
+                ],
+            ],
+        ]);
+
+        $liability = $response->getLiability();
+        $this->assertFalse($liability->getThreeDs()->getAuthenticated());
+        $this->assertNull($liability->getThreeDs()->getLiabilityShift());
+        $this->assertNull($liability->getThreeDs()->getXid());
+    }
+
     private function assertResponseHeader(ResponseHeader $responseHeader): void
     {
         $this->assertEquals('1.51', $responseHeader->getSpecVersion());

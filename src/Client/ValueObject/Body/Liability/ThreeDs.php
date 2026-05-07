@@ -8,8 +8,8 @@ class ThreeDs
 {
     private function __construct(
         private bool $authenticated,
-        private bool $liabilityShift,
-        private string $xId,
+        private ?bool $liabilityShift,
+        private ?string $xId,
     ) {
     }
 
@@ -18,12 +18,12 @@ class ThreeDs
         return $this->authenticated;
     }
 
-    public function getLiabilityShift(): bool
+    public function getLiabilityShift(): ?bool
     {
         return $this->liabilityShift;
     }
 
-    public function getXid(): string
+    public function getXid(): ?string
     {
         return $this->xId;
     }
@@ -41,8 +41,8 @@ class ThreeDs
     {
         return new self(
             $data['Authenticated'],
-            $data['LiabilityShift'],
-            $data['Xid'],
+            $data['LiabilityShift'] ?? null,
+            $data['Xid'] ?? null,
         );
     }
 }
