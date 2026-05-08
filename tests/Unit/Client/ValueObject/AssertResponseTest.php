@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\CommerceWeavers\SyliusSaferpayPlugin\Unit\Client\ValueObject;
 
 use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\AssertResponse;
-use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\Body\Liability;
-use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\Body\PaymentMeans;
 use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\Body\Transaction;
 use CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\Header\ResponseHeader;
 use PHPUnit\Framework\TestCase;
@@ -107,7 +105,7 @@ final class AssertResponseTest extends TestCase
                 'Date' => '2015-01-30T12:45:22.258+01:00',
                 'Amount' => [
                     'Value' => '100',
-                    'CurrencyCode' => 'CHF'
+                    'CurrencyCode' => 'CHF',
                 ],
                 'OrderId' => '000000001',
                 'AcquirerName' => 'PayPal Saferpay Test',
@@ -117,24 +115,24 @@ final class AssertResponseTest extends TestCase
             'PaymentMeans' => [
                 'Brand' => [
                     'PaymentMethod' => 'PAYPAL',
-                    'Name' => 'PayPal'
+                    'Name' => 'PayPal',
                 ],
                 'DisplayText' => 'PayPal',
                 'PayPal' => [
                     'PayerId' => '59e803d5-a697-420b-a9cf-cd73d85bcff5',
                     'SellerProtectionStatus' => 'ELIGIBLE',
-                    'Email' => 'paypal@email.com'
-                ]
+                    'Email' => 'paypal@email.com',
+                ],
             ],
             'Payer' => [
                 'IpAddress' => '1.1.1.1',
-                'IpLocation' => 'PL'
+                'IpLocation' => 'PL',
             ],
             'Liability' => [
                 'LiabilityShift' => false,
                 'LiableEntity' => 'MERCHANT',
-                'InPsd2Scope' => 'UNKNOWN'
-            ]
+                'InPsd2Scope' => 'UNKNOWN',
+            ],
         ]);
 
         $this->assertResponseHeader($response->getResponseHeader());
@@ -212,6 +210,116 @@ final class AssertResponseTest extends TestCase
         $this->assertFalse($liability->getThreeDs()->getAuthenticated());
         $this->assertNull($liability->getThreeDs()->getLiabilityShift());
         $this->assertNull($liability->getThreeDs()->getXid());
+    }
+
+    /** @test */
+    public function it_creates_assert_paypal_response_vo_from_array_when_paypal_block_has_only_seller_protection_status(): void
+    {
+        $response = AssertResponse::fromArray([
+            'StatusCode' => 200,
+            'ResponseHeader' => [
+                'SpecVersion' => '1.51',
+                'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
+            ],
+            'Transaction' => [
+                'Type' => 'PAYMENT',
+                'Status' => 'AUTHORIZED',
+                'Id' => '723n4MAjMdhjSAhAKEUdA8jtl9jb',
+                'Date' => '2015-01-30T12:45:22.258+01:00',
+                'Amount' => [
+                    'Value' => '100',
+                    'CurrencyCode' => 'CHF',
+                ],
+                'OrderId' => '000000001',
+                'AcquirerName' => 'PayPal Saferpay Test',
+                'SixTransactionReference' => '0:0:3:723n4MAjMdhjSAhAKEUdA8jtl9jb',
+                'ApprovalCode' => '012345',
+            ],
+            'PaymentMeans' => [
+                'Brand' => [
+                    'PaymentMethod' => 'PAYPAL',
+                    'Name' => 'PayPal',
+                ],
+                'DisplayText' => 'PayPal',
+                'PayPal' => [
+                    'SellerProtectionStatus' => 'ELIGIBLE',
+                ],
+            ],
+            'Liability' => [
+                'LiabilityShift' => false,
+                'LiableEntity' => 'MERCHANT',
+            ],
+        ]);
+
+        $payPal = $response->getPaymentMeans()->getPayPal();
+        $this->assertNull($payPal->getPayerId());
+        $this->assertNull($payPal->getEmail());
+        $this->assertEquals('ELIGIBLE', $payPal->getSellerProtectionStatus());
+    }
+
+    /** @test */
+    public function it_creates_assert_response_vo_from_array_when_transaction_has_no_six_transaction_reference(): void
+    {
+        $response = AssertResponse::fromArray([
+            'StatusCode' => 200,
+            'ResponseHeader' => [
+                'SpecVersion' => '1.51',
+                'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
+            ],
+            'Transaction' => [
+                'Type' => 'PAYMENT',
+                'Status' => 'AUTHORIZED',
+                'Id' => '723n4MAjMdhjSAhAKEUdA8jtl9jb',
+                'Date' => '2015-01-30T12:45:22.258+01:00',
+                'Amount' => [
+                    'Value' => '100',
+                    'CurrencyCode' => 'CHF',
+                ],
+                'OrderId' => '000000001',
+            ],
+            'PaymentMeans' => [
+                'Brand' => [
+                    'PaymentMethod' => 'PAYPAL',
+                    'Name' => 'PayPal',
+                ],
+                'DisplayText' => 'PayPal',
+            ],
+        ]);
+
+        $this->assertNull($response->getTransaction()->getSixTransactionReference());
+    }
+
+    /** @test */
+    public function it_creates_assert_response_vo_from_array_when_brand_has_no_name(): void
+    {
+        $response = AssertResponse::fromArray([
+            'StatusCode' => 200,
+            'ResponseHeader' => [
+                'SpecVersion' => '1.51',
+                'RequestId' => 'b27de121-ffa0-4f1d-b7aa-b48109a88486',
+            ],
+            'Transaction' => [
+                'Type' => 'PAYMENT',
+                'Status' => 'AUTHORIZED',
+                'Id' => '723n4MAjMdhjSAhAKEUdA8jtl9jb',
+                'Date' => '2015-01-30T12:45:22.258+01:00',
+                'Amount' => [
+                    'Value' => '100',
+                    'CurrencyCode' => 'CHF',
+                ],
+                'SixTransactionReference' => '0:0:3:723n4MAjMdhjSAhAKEUdA8jtl9jb',
+            ],
+            'PaymentMeans' => [
+                'Brand' => [
+                    'PaymentMethod' => 'DIRECTDEBIT',
+                ],
+                'DisplayText' => 'DIRECTDEBIT',
+            ],
+        ]);
+
+        $brand = $response->getPaymentMeans()->getBrand();
+        $this->assertNull($brand->getName());
+        $this->assertEquals('DIRECTDEBIT', $brand->getPaymentMethod());
     }
 
     private function assertResponseHeader(ResponseHeader $responseHeader): void

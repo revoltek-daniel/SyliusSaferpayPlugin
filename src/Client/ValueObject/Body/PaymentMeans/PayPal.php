@@ -7,18 +7,18 @@ namespace CommerceWeavers\SyliusSaferpayPlugin\Client\ValueObject\Body\PaymentMe
 class PayPal
 {
     private function __construct(
-        private string $payerId,
-        private string $email,
+        private ?string $payerId,
+        private ?string $email,
         private ?string $sellerProtectionStatus,
     ) {
     }
 
-    public function getPayerId(): string
+    public function getPayerId(): ?string
     {
         return $this->payerId;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -40,8 +40,8 @@ class PayPal
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['PayerId'],
-            $data['Email'],
+            $data['PayerId'] ?? null,
+            $data['Email'] ?? null,
             $data['SellerProtectionStatus'] ?? null,
         );
     }
