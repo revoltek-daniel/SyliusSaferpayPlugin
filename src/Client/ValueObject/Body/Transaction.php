@@ -15,7 +15,7 @@ class Transaction
         private string $id,
         private string $date,
         private Amount $amount,
-        private string $sixTransactionReference,
+        private ?string $sixTransactionReference,
         private ?string $captureId,
         private ?string $orderId,
         private ?string $acquirerName,
@@ -50,7 +50,7 @@ class Transaction
         return $this->amount;
     }
 
-    public function getSixTransactionReference(): string
+    public function getSixTransactionReference(): ?string
     {
         return $this->sixTransactionReference;
     }
@@ -111,7 +111,7 @@ class Transaction
             $data['Id'],
             $data['Date'],
             Amount::fromArray($data['Amount']),
-            $data['SixTransactionReference'],
+            $data['SixTransactionReference'] ?? null,
             $data['CaptureId'] ?? null,
             $data['OrderId'] ?? null,
             $data['AcquirerName'] ?? null,
