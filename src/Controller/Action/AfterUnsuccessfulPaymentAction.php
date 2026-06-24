@@ -74,6 +74,13 @@ final class AfterUnsuccessfulPaymentAction
             return;
         }
 
+        $payerMessage = $payment->getDetails()['payer_message'] ?? null;
+        if (is_string($payerMessage) && $payerMessage !== '') {
+            $this->addFlashMessage($request, 'error', $payerMessage);
+
+            return;
+        }
+
         $this->addFlashMessage($request, 'error', 'sylius.payment.failed');
     }
 }

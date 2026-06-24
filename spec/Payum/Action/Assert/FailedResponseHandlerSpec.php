@@ -23,12 +23,14 @@ final class FailedResponseHandlerSpec extends ObjectBehavior
             ->setDetails([
                 'some_key' => 'some_value',
                 'transaction_id' => 'some_transaction_id',
+                'payer_message' => null,
                 'status' => StatusAction::STATUS_CANCELLED,
             ])
             ->shouldBeCalled()
         ;
 
         $response->getTransactionId()->willReturn('some_transaction_id');
+        $response->getPayerMessage()->willReturn(null);
         $response->getName()->willReturn(ErrorName::TRANSACTION_ABORTED);
 
         $this->handle($payment, $response);
@@ -45,12 +47,14 @@ final class FailedResponseHandlerSpec extends ObjectBehavior
             ->setDetails([
                 'some_key' => 'some_value',
                 'transaction_id' => 'some_transaction_id',
+                'payer_message' => 'Use another card or other payment method.',
                 'status' => StatusAction::STATUS_FAILED,
             ])
             ->shouldBeCalled()
         ;
 
         $response->getTransactionId()->willReturn('some_transaction_id');
+        $response->getPayerMessage()->willReturn('Use another card or other payment method.');
         $response->getName()->willReturn(ErrorName::TRANSACTION_DECLINED);
 
         $this->handle($payment, $response);
