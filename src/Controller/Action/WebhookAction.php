@@ -7,10 +7,12 @@ namespace CommerceWeavers\SyliusSaferpayPlugin\Controller\Action;
 use CommerceWeavers\SyliusSaferpayPlugin\Exception\PaymentAlreadyProcessedException;
 use CommerceWeavers\SyliusSaferpayPlugin\Exception\PaymentBeingProcessedException;
 use CommerceWeavers\SyliusSaferpayPlugin\Payment\Command\AssertPaymentCommand;
-use CommerceWeavers\SyliusSaferpayPlugin\Processor\SaferpayPaymentProcessor;
+use CommerceWeavers\SyliusSaferpayPlugin\Processor\SaferpayPaymentProcessorInterface;
 use CommerceWeavers\SyliusSaferpayPlugin\Provider\PaymentProviderInterface;
 use Payum\Core\Payum;
 use Psr\Log\LoggerInterface;
+use Sylius\Component\Core\Model\PaymentInterface;
+use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,12 +21,14 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 final class WebhookAction
 {
+    private const SAFERPAY_FACTORY_NAME = 'saferpay';
+
     public function __construct(
         private Payum $payum,
         private MessageBusInterface $commandBus,
         private LoggerInterface $logger,
         private PaymentProviderInterface $paymentProvider,
-        private SaferpayPaymentProcessor $saferpayPaymentProcessor,
+        private SaferpayPaymentProcessorInterface $saferpayPaymentProcessor,
     ) {
     }
 
@@ -35,6 +39,19 @@ final class WebhookAction
         $this->logger->debug('Handling webhook started for order ' . $orderToken);
 
         $payment = $this->paymentProvider->provideForOrder($orderToken);
+
+        // The customer may have switched to another payment method after starting the Saferpay payment
+        if ($this->isSaferpayPayment($payment) === false) {
+            $httpRequestVerifier = $this->payum->getHttpRequestVerifier();
+            $httpRequestVerifier->invalidate($httpRequestVerifier->verify($request));
+
+            $this->logger->warning(
+                'Webhook ignored - payment ' . (string) $payment->getId() . ' no longer uses a Saferpay payment method',
+                ['orderToken' => $orderToken],
+            );
+
+            return new JsonResponse(status: Response::HTTP_OK);
+        }
 
         try {
             $this->saferpayPaymentProcessor->lock($payment);
@@ -57,5 +74,13 @@ final class WebhookAction
         $this->logger->debug('Webhook handled ' . $orderToken . ' successfully');
 
         return new JsonResponse(status: Response::HTTP_OK);
+    }
+
+    private function isSaferpayPayment(PaymentInterface $payment): bool
+    {
+        /** @var PaymentMethodInterface|null $paymentMethod */
+        $paymentMethod = $payment->getMethod();
+
+        return $paymentMethod?->getGatewayConfig()?->getFactoryName() === self::SAFERPAY_FACTORY_NAME;
     }
 }
